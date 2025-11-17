@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import copy
 import seaborn as sns
 
-def generate_tsp_instance(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=None, seed_opening_times=None):
+def generate_tsp_instance(n=5, max_coordinate=100, max_opening_time=10, 
+seed_coordinates=None, seed_opening_times=None):
 
     #Seme per la generazione delle coordiante
     if seed_coordinates is not None:
@@ -28,7 +29,8 @@ def generate_tsp_instance(n=5, max_coordinate=100, max_opening_time=10, seed_coo
             distance_matrix[i][j] = dist
             distance_matrix[j][i] = dist
 
-    #Nodo: id, tempo di apertura, coordinate, vettore di distanza per tutti i punti (0 distanza da se stesso)
+    #Nodo: id, tempo di apertura, coordinate, 
+    # vettore di distanza per tutti i punti (0 distanza da se stesso)
     nodes = []
     for i in range(n):
         node = {
@@ -68,7 +70,7 @@ def main():
     call_greedy(20, 100, 80, 44, 2,'greedy_minimum_opening_time')
     compare_greedy(20,100,80,44,2)
 
-    # LE SEGUENTI RIGHE APPLICANO LE GREEDY SU UN'ISTANZA ALLA VOLTA
+    """# LE SEGUENTI RIGHE APPLICANO LE GREEDY SU UN'ISTANZA ALLA VOLTA
     Sol1 = greedy_minimum_opening_time(instance_1)
     Sol1B = greedy_minimum_opening_time(instance_2)
 
@@ -100,7 +102,7 @@ def main():
     #plot_tsp_nodes_link(Sol2B)
 
     #plot_tsp_nodes_link(Sol3)
-    #plot_tsp_nodes_link(Sol3B)
+    #plot_tsp_nodes_link(Sol3B)"""
 
     plt.show()
 
@@ -120,8 +122,8 @@ def plot_tsp_nodes(nodes):
         if node['id'] == 0:
             plt.scatter(x, y, color='red', s=50, zorder=3)
         else:
-          plt.scatter(x, y, color='blue', s=50, zorder=3)
-        plt.text(x + 1, y + 1, f"{node['id']}", fontsize=9, color='black')
+            plt.scatter(x, y, color='blue', s=50, zorder=3)
+            plt.text(x + 1, y + 1, f"{node['id']}", fontsize=9, color='black')
 
     plt.xlabel("X Coordinate")
     plt.ylabel("Y Coordinate")
@@ -141,10 +143,10 @@ def plot_tsp_nodes_link(nodes, title = "TSP Nodes Visualization", value = "",sho
     for node in nodes:
         x, y = node['coordinates']
         if node['id'] == 0:
-             plt.scatter(x, y, color='red', s=50, zorder=3)
+            plt.scatter(x, y, color='red', s=50, zorder=3)
         else:
-          plt.scatter(x, y, color='blue', s=50, zorder=3)
-        plt.text(x + 1, y + 1, f"{node['id']}", fontsize=9, color='black', zorder=3)
+            plt.scatter(x, y, color='blue', s=50, zorder=3)
+            plt.text(x + 1, y + 1, f"{node['id']}", fontsize=9, color='black', zorder=3)
 
     #Disegna le frecce tra i nodi
     for i in range(len(nodes) - 1):
@@ -220,36 +222,35 @@ def calculate_objective(route, istance, info=None):
 
     #Se non sono presenti tutti gli elementi di istance in route --> Soluzione non valida
     for node in istance:
-          if not (any(r['id'] == node['id'] for r in route)):
-              print(f"Soluzione non valida: Il nodo con ID: {node['id']} non è presente nella soluzione!")
-              return None
+        if not (any(r['id'] == node['id'] for r in route)):
+            print(f"Soluzione non valida: Il nodo con ID: {node['id']} non è presente nella soluzione!")
+            return None
 
     #Calcolo il valore della soluzione
     #Genero il vettore delle distanze
     distance = []
     for i in range(len(route) - 1):
-          id_next_node = route[i+1]['id']
-          d = route[i]['distance_vector'][id_next_node]
-          distance.append(d)
+        id_next_node = route[i+1]['id']
+        d = route[i]['distance_vector'][id_next_node]
+        distance.append(d)
     distance.append(route[-1]['distance_vector'][0])
 
     #Genero valore di tarniess per la route
     time = 0
     tardiness = []
     for i, node in enumerate(route[1:], start=0):
-          time += distance[i]
+        time += distance[i]
+        if time < node['opning_time']:
+            idle_time = node['opening_time'] - time
+            time = time + idle_time
+        else:
+            idle_time = 0
 
-          if time < node['opening_time']:
-                idle_time = node['opening_time'] - time
-                time = time + idle_time
-          else:
-              idle_time = 0
+        tardiness_node = max(0, time - node['opening_time'])
+        tardiness.append(tardiness_node)
 
-          tardiness_node = max(0, time - node['opening_time'])
-          tardiness.append(tardiness_node)
-
-          if info is not None:
-                print(f"Nodo: {node['id']}, apertura {node['opening_time']} --> arrivo: {time-idle_time}, idle: {idle_time}, tardiness: {tardiness_node}")
+        if info is not None:
+            print(f"Nodo: {node['id']}, apertura {node['opening_time']} --> arrivo: {time-idle_time}, idle: {idle_time}, tardiness: {tardiness_node}")
 
     #Calcolo valore della soluzione
     tot_distance = sum(distance)
@@ -257,9 +258,9 @@ def calculate_objective(route, istance, info=None):
     value_solution = tot_distance + tot_tardiness
 
     if info is not None:
-          print(f"\tValore soluzione --> {value_solution}")
-          print(f"\t - Totale distanza percorsa: {tot_distance}")
-          print(f"\t - Totale tempo di tardiness {tot_tardiness}")
+        print(f"\tValore soluzione --> {value_solution}")
+        print(f"\t - Totale distanza percorsa: {tot_distance}")
+        print(f"\t - Totale tempo di tardiness {tot_tardiness}")
 
 
     return value_solution
@@ -279,14 +280,14 @@ def greedy_minimum_opening_time(nodes):
     route[-1]['idle_tardiness'] = (0,0)
 
     for item in sorted_items[1:]:
-            current_time += route[-1]['distance_vector'][item['id']]
+        current_time += route[-1]['distance_vector'][item['id']]
 
-            idle = max(0, item['opening_time'] - current_time)
-            current_time += idle
-            tardiness = max(0,current_time - item['opening_time'])
+        idle = max(0, item['opening_time'] - current_time)
+        current_time += idle
+        tardiness = max(0,current_time - item['opening_time'])
 
-            route.append(item)
-            route[-1]['idle_tardiness'] = (idle,tardiness)
+        route.append(item)
+        route[-1]['idle_tardiness'] = (idle,tardiness)
 
     return route
 
@@ -305,14 +306,14 @@ def greedy_minimum_distance_from_zero(nodes):
     route[-1]['idle_tardiness'] = (0,0)
 
     for item in sorted_items[1:]:
-            current_time += route[-1]['distance_vector'][item['id']]
+        current_time += route[-1]['distance_vector'][item['id']]
 
-            idle = max(0, item['opening_time'] - current_time)
-            current_time += idle
-            tardiness = max(0,current_time - item['opening_time'])
+        idle = max(0, item['opening_time'] - current_time)
+        current_time += idle
+        tardiness = max(0,current_time - item['opening_time'])
 
-            route.append(item)
-            route[-1]['idle_tardiness'] = (idle,tardiness)
+        route.append(item)
+        route[-1]['idle_tardiness'] = (idle,tardiness)
 
     return route
 
@@ -356,11 +357,11 @@ def nn_greedy(istance):
 # ********************************
 # FUNZIONI DI STAMPA DELLE GREEDY
 # ********************************
-def call_greedy(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=None, seed_opening_times=None, greedy = 'greedy_minimum_opening_time',plot="YES"):
-          function = {
-          'greedy_minimum_opening_time' : greedy_minimum_opening_time,
-          'greedy_minimum_distance_from_zero' : greedy_minimum_distance_from_zero,
-          'nn_greedy' : nn_greedy
+def call_greedy(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=None, 
+                seed_opening_times=None, greedy = 'greedy_minimum_opening_time',plot="YES"):
+          function = {'greedy_minimum_opening_time' : greedy_minimum_opening_time,
+                      'greedy_minimum_distance_from_zero' : greedy_minimum_distance_from_zero,
+                      'nn_greedy' : nn_greedy
           }
 
           if greedy in function:
@@ -371,27 +372,23 @@ def call_greedy(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=N
                 if plot is not None:
                     plot_tsp_nodes_link(sol_greedy,greedy,str(sol_greedy_val))
                 else:
-                  return sol_greedy, sol_greedy_val
+                    return sol_greedy, sol_greedy_val
 
 def compare_greedy(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=None, seed_opening_times=None,plot ="YES"):
 
-      sol_Gmot, val_Gmot = call_greedy(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times,'greedy_minimum_opening_time',None)
-      sol_Gmdfz, val_Gmdfz = call_greedy(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times,'greedy_minimum_distance_from_zero',None)
-      sol_Gnn, val_Gnn = call_greedy(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times,'nn_greedy',None)
-      if plot is not None:
-          plt.figure(figsize=(18, 6))
+    sol_Gmot, val_Gmot = call_greedy(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times,'greedy_minimum_opening_time',None)
+    sol_Gmdfz, val_Gmdfz = call_greedy(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times,'greedy_minimum_distance_from_zero',None)
+    sol_Gnn, val_Gnn = call_greedy(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times,'nn_greedy',None)
+    if plot is not None:
+        plt.figure(figsize=(18, 6))
+        plt.subplot(1, 3, 1)
+        plot_tsp_nodes_link_nofigure(sol_Gmot,'greedy_minimum_opening_time',str(val_Gmot))
+        plt.subplot(1, 3, 2)
+        plot_tsp_nodes_link_nofigure(sol_Gmdfz,'greedy_minimum_distance_from_zero',str(val_Gmdfz))
+        plt.subplot(1, 3, 3)
+        plot_tsp_nodes_link_nofigure(sol_Gnn,'nn_greedy',str(val_Gnn))
+        plt.tight_layout()
+        plt.show()
 
-          plt.subplot(1, 3, 1)
-          plot_tsp_nodes_link_nofigure(sol_Gmot,'greedy_minimum_opening_time',str(val_Gmot))
-
-          plt.subplot(1, 3, 2)
-          plot_tsp_nodes_link_nofigure(sol_Gmdfz,'greedy_minimum_distance_from_zero',str(val_Gmdfz))
-
-          plt.subplot(1, 3, 3)
-          plot_tsp_nodes_link_nofigure(sol_Gnn,'nn_greedy',str(val_Gnn))
-
-          plt.tight_layout()
-          plt.show()
-
-      else:
-          return val_Gmot, val_Gmdfz, val_Gnn
+    else:
+        return val_Gmot, val_Gmdfz, val_Gnn
