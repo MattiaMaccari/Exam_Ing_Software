@@ -97,13 +97,13 @@ def main():
 
     # STAMPO DELLE METRICHE INERENTI ALLE LOCAL SEARCH
 
-    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LS_swap_adjacent')
-    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LS_swap_adjacent')
-    call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LS_swap_adjacent')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LS_swap_adjacent')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LS_swap_adjacent')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LS_swap_adjacent')
 
-    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insert')
-    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insert')
-    call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insert')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insert')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insert')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insert')
     
     call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insertT')
     call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insertT')
