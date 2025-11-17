@@ -47,18 +47,8 @@ def print_istance(nodes):
     for node in nodes:
         print(f"ID: {node['id']}\tOpening Time: {node['opening_time']} \tCoordinates: {node['coordinates']}\tDistance Vector: {node['distance_vector']}")
 
-# PROVA DELLA FUNZIONE MAIN
-""" def main():
-    nodes = generate_tsp_instance(
-        n=10,
-        max_coordinate=50,
-        max_opening_time=20,
-        seed_coordinates=42,
-        seed_opening_times=99
-    )
-    print_istance(nodes) """
-
 def main():
+    print("Tutto aggiornato")
     # GENERAZIONE DELLE ISTANZE
     instance_1 = generate_tsp_instance(n=5, seed_coordinates=1, seed_opening_times=2)
     instance_2 = generate_tsp_instance(n=20, max_coordinate=200, seed_coordinates=3, seed_opening_times=4)
@@ -67,24 +57,24 @@ def main():
 
     # LE RIGHE SEGUENTI STAMPANO DIRETTAMENTE LE SOLUZIONI DELLE GREEDY E LA LORO COMPARAZIONE
     # IN UN UNICO SUBPLOT SENZA DOVER INVOCARE ESPLICITAMENTE LA FUNZIONE plot_tsp_node_link
-    call_greedy(20, 100, 80, 44, 2,'greedy_minimum_opening_time')
-    compare_greedy(20,100,80,44,2)
+    #call_greedy(20, 100, 80, 44, 2,'greedy_minimum_opening_time')
+    #compare_greedy(20,100,80,44,2)
 
-    """# LE SEGUENTI RIGHE APPLICANO LE GREEDY SU UN'ISTANZA ALLA VOLTA
-    Sol1 = greedy_minimum_opening_time(instance_1)
-    Sol1B = greedy_minimum_opening_time(instance_2)
+    #LE SEGUENTI RIGHE APPLICANO LE GREEDY SU UN'ISTANZA ALLA VOLTA
+    #Sol1 = greedy_minimum_opening_time(instance_1)
+    #Sol1B = greedy_minimum_opening_time(instance_2)
 
-    Sol2 = greedy_minimum_distance_from_zero(instance_1)
-    Sol2B = greedy_minimum_distance_from_zero(instance_2)
+    #Sol2 = greedy_minimum_distance_from_zero(instance_1)
+    #Sol2B = greedy_minimum_distance_from_zero(instance_2)
 
-    Sol3 = nn_greedy(instance_1)
-    Sol3B = nn_greedy(instance_2)
+    #Sol3 = nn_greedy(instance_1)
+    #Sol3B = nn_greedy(instance_2)
 
-    # STAMPA DELLE ISTANZE GENERATE
-    print("Istanza 1:")
-    print_istance(instance_1)
-    print("\nIstanza 2:")
-    print_istance(instance_2)
+    ## STAMPA DELLE ISTANZE GENERATE
+    #print("Istanza 1:")
+    #print_istance(instance_1)
+    #print("\nIstanza 2:")
+    #print_istance(instance_2)
 
     #print("\n")
     #plot_tsp_nodes(instance_1)
@@ -102,7 +92,24 @@ def main():
     #plot_tsp_nodes_link(Sol2B)
 
     #plot_tsp_nodes_link(Sol3)
-    #plot_tsp_nodes_link(Sol3B)"""
+    #plot_tsp_nodes_link(Sol3B)
+
+
+    # STAMPO DELLE METRICHE INERENTI ALLE LOCAL SEARCH
+
+    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LS_swap_adjacent')
+    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LS_swap_adjacent')
+    call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LS_swap_adjacent')
+
+    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insert')
+    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insert')
+    call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insert')
+    
+    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insertT')
+    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insertT')
+    call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insertT')
+
+
 
     plt.show()
 
@@ -240,7 +247,7 @@ def calculate_objective(route, istance, info=None):
     tardiness = []
     for i, node in enumerate(route[1:], start=0):
         time += distance[i]
-        if time < node['opning_time']:
+        if time < node['opening_time']:
             idle_time = node['opening_time'] - time
             time = time + idle_time
         else:
@@ -354,6 +361,154 @@ def nn_greedy(istance):
     return nn_route
 
 
+# ***********************************
+# PRIMA LOCAL SEARCH = SWAP ADJIACENT
+# ***********************************
+def LS_swap_adjacent(route, obj_val, istance):
+
+    current_route = copy.deepcopy(route)
+    current_obj_val  = obj_val
+    n_nodes = len(current_route)
+    improved = True
+    moves_counter = 0
+    info_extra = []
+
+    while improved:
+        improved = False
+        current_route_sorted = sorted(current_route[1:], key=lambda x: (-x["idle_tardiness"][0], -x["idle_tardiness"][1] if x["idle_tardiness"][0] == 0 else 0))
+
+        for node in current_route_sorted:
+            new_route = copy.deepcopy(current_route)
+            #index_node = current_route.index(node)
+            index_node = next(i for i, n in enumerate(current_route) if n['id'] == node['id'])
+            if index_node != len(new_route) - 1:
+                  new_route[index_node], new_route[index_node+1] = new_route[index_node+1], new_route[index_node]
+                  new_obj_val = calculate_objective(new_route,istance)
+
+                  if new_obj_val < current_obj_val:
+                      current_route = new_route
+                      current_obj_val = new_obj_val
+                      moves_counter += 1
+                      improved = True
+                      info_extra.append({'fo':current_obj_val, 'move':moves_counter})
+
+                      current_time = 0
+                      for i in range (1, len(current_route)):
+                            current_time += current_route[i-1]['distance_vector'][i]
+                            idle = max(0, current_route[i]['opening_time'] - current_time)
+                            current_time += idle
+                            tardiness = max(0,current_time -  current_route[i]['opening_time'])
+                            current_route[i]['idle_tardiness'] = (idle, tardiness)
+
+                            break   
+    return current_route, current_obj_val, moves_counter, info_extra
+
+# ***********************************
+# SECONDA LOCAL SEARCH = CITY INSERT
+# ***********************************
+def LSH_city_insert(route, obj_val, istance, H):
+
+  #Inizializzo la soluzione corrente
+  current_route = copy.deepcopy(route)
+  current_obj_val  = obj_val
+
+  #Inizializzazione variabili
+  n_nodes = len(current_route)
+  improved = True
+  moves_counter = 0
+
+  info_extra = []
+
+  #Eseguo la ricerca nell'intorno fino a quando non ci sono piu' mosse vantaggiose
+  while improved:
+    improved = False
+
+    #Cerco h soluzioni migliori di quella corrente
+    h_route_set = []
+    for h in range(0, H):
+        h_improved = False
+        for i in range(n_nodes-1,0,-1):
+            tmp_route = copy.deepcopy(current_route)
+            node_to_move = tmp_route.pop(i)
+            for p in range(1,len(tmp_route)+1):
+                  #FILTRO
+                  if i != p and (tmp_route[p-1]['distance_vector'][i] < tmp_route[p-1]['distance_vector'][p] or \
+                     tmp_route[0]['distance_vector'][i] < tmp_route[0]['distance_vector'][p]):
+                        h_route = copy.deepcopy(tmp_route)
+                        h_route.insert(p,node_to_move)
+                        #Controllo che la h_route non sia già in h_route_set
+                        if h_route not in h_route_set:
+                              h_obj_val = calculate_objective(h_route,istance)
+                              if h_obj_val < current_obj_val:
+                                  h_route_set.append({'h':h_route, 'obj_val':h_obj_val})
+                                  h_improved = True
+                                  break
+            if h_improved:
+                break
+    if len(h_route_set) != 0:
+          best_h = min(h_route_set,key = lambda x : x['obj_val'])
+          current_route = best_h['h']
+          current_obj_val = best_h['obj_val']
+          moves_counter += 1
+          improved = True
+          info_extra.append({'fo':current_obj_val, 'move':moves_counter})
+
+  return current_route, current_obj_val, moves_counter,info_extra
+
+
+# ***********************************
+# SECONDA LOCAL SEARCH = CITY INSERT TAIL
+# ***********************************
+def LSH_city_insertT(route, obj_val, istance, H):
+
+  #Inizializzo la soluzione corrente
+  current_route = copy.deepcopy(route)
+  current_obj_val  = obj_val
+
+  #Inizializzazione variabili
+  n_nodes = len(current_route)
+  improved = True
+  moves_counter = 0
+
+  info_extra = []
+
+  #Eseguo la ricerca nell'intorno fino a quando non ci sono piu' mosse vantaggiose
+  while improved:
+    improved = False
+
+    #Cerco h soluzioni migliori di quella corrente
+    h_route_set = []
+    for h in range(0, H):
+        h_improved = False
+        for i in range(n_nodes-1,0,-1):
+            tmp_route = copy.deepcopy(current_route)
+            node_to_move = tmp_route.pop(i)
+            for p in range(len(tmp_route),0,-1):
+                  #FILTRO
+                  if i != p and (tmp_route[p-1]['distance_vector'][i] < tmp_route[p-1]['distance_vector'][p] or \
+                     tmp_route[0]['distance_vector'][i] < tmp_route[0]['distance_vector'][p]):
+                        h_route = copy.deepcopy(tmp_route)
+                        h_route.insert(p,node_to_move)
+                        #Controllo che la h_route non sia già in h_route_set
+                        if h_route not in h_route_set:
+                              h_obj_val = calculate_objective(h_route,istance)
+                              if h_obj_val < current_obj_val:
+                                  h_route_set.append({'h':h_route, 'obj_val':h_obj_val})
+                                  h_improved = True
+                                  break
+            if h_improved:
+                break
+    if len(h_route_set) != 0:
+          best_h = min(h_route_set,key = lambda x : x['obj_val'])
+          current_route = best_h['h']
+          current_obj_val = best_h['obj_val']
+          moves_counter += 1
+          improved = True
+          info_extra.append({'fo':current_obj_val, 'move':moves_counter})
+
+  return current_route, current_obj_val, moves_counter,info_extra
+
+
 # ********************************
 # FUNZIONI DI STAMPA DELLE GREEDY
 # ********************************
@@ -392,3 +547,57 @@ def compare_greedy(n=5, max_coordinate=100, max_opening_time=10, seed_coordinate
 
     else:
         return val_Gmot, val_Gmdfz, val_Gnn
+    
+
+
+# *************************************
+# FUNZIONI DI STAMPA DELLE LOCAL SEARCH
+# *************************************
+
+def call_LocalSearch(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=None, seed_opening_times=None, greedy = 'greedy_minimum_opening_time', local_search= 'LSH_city_insert', H=1, plot="YES"):
+      function = {
+          'greedy_minimum_opening_time' : greedy_minimum_opening_time,
+          'greedy_minimum_distance_from_zero' : greedy_minimum_distance_from_zero,
+          'nn_greedy' : nn_greedy,
+          'LS_swap_adjacent' : LS_swap_adjacent,
+          'LS_swap_adjacent' : LS_swap_adjacent,
+          'LSH_city_insert' : LSH_city_insert,
+          'LSH_city_insertT' : LSH_city_insertT
+      }
+
+      if greedy in function and local_search in function:
+            instance =  generate_tsp_instance(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times)
+            sol_greedy = function[greedy](instance)
+            sol_greedy_val = calculate_objective(sol_greedy,instance)
+            if local_search == "LSH_city_insert" or local_search == "LSH_city_insertT":
+                  LS_route, LS_value, LS_moves, LS_extra_info = function[local_search](sol_greedy,sol_greedy_val,instance,H)
+            else:
+                  LS_route, LS_value, LS_moves, LS_extra_info = function[local_search](sol_greedy,sol_greedy_val,instance)
+
+            if plot is not None:
+                  plt.figure(figsize=(18, 6))
+
+                  plt.subplot(1, 3, 1)
+                  plot_tsp_nodes_link_nofigure(sol_greedy,greedy,str(sol_greedy_val))
+
+                  plt.subplot(1, 3, 2)
+                  plot_tsp_nodes_link_nofigure(LS_route,local_search,str(LS_value))
+
+                  plt.subplot(1, 3, 3)
+                  moves = [d['move'] for d in LS_extra_info]
+                  fo_s = [d['fo'] for d in LS_extra_info]
+
+                  plt.scatter(0, sol_greedy_val, color='red', label="Greedy value")
+                  sns.lineplot(x=moves, y=fo_s, marker='o', linestyle='-', color='b',label="FO Value")
+                  plt.plot([0, moves[0]], [sol_greedy_val, fo_s[0]], color='b', linestyle='-')
+
+                  plt.title(f"Trend FO - Moves {LS_extra_info[-1]['move']}")
+                  plt.xlabel("Moves")
+                  plt.ylabel("FO Val")
+
+                  plt.legend()
+                  plt.grid(True)
+                  plt.tight_layout()
+                  plt.show()
+            else:
+              return local_search, LS_extra_info
