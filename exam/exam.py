@@ -48,7 +48,6 @@ def print_istance(nodes):
         print(f"ID: {node['id']}\tOpening Time: {node['opening_time']} \tCoordinates: {node['coordinates']}\tDistance Vector: {node['distance_vector']}")
 
 def main():
-    print("Tutto aggiornato")
     # GENERAZIONE DELLE ISTANZE
     instance_1 = generate_tsp_instance(n=5, seed_coordinates=1, seed_opening_times=2)
     instance_2 = generate_tsp_instance(n=20, max_coordinate=200, seed_coordinates=3, seed_opening_times=4)
@@ -105,10 +104,13 @@ def main():
     #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insert')
     #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insert')
     
-    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insertT')
-    call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insertT')
-    call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insertT')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insertT')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insertT')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insertT')
 
+    # STAMPO I RISULTATI DELLE TABU SEARCH
+    call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'information_guided_tabu_searchAR',15,3)
+    call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'tabu_search_city_insertAR',15,4)
 
 
     plt.show()
@@ -456,9 +458,9 @@ def LSH_city_insert(route, obj_val, istance, H):
   return current_route, current_obj_val, moves_counter,info_extra
 
 
-# ***********************************
-# SECONDA LOCAL SEARCH = CITY INSERT TAIL
-# ***********************************
+# *************************************
+# TERZA LOCAL SEARCH = CITY INSERT TAIL
+# *************************************
 def LSH_city_insertT(route, obj_val, istance, H):
 
   #Inizializzo la soluzione corrente
@@ -507,6 +509,175 @@ def LSH_city_insertT(route, obj_val, istance, H):
           info_extra.append({'fo':current_obj_val, 'move':moves_counter})
 
   return current_route, current_obj_val, moves_counter,info_extra
+
+
+# ************************************
+# PRIMA TABU SEARCH = CITY INSERT AR
+# **************************************
+import time
+import copy
+
+def tabu_search_city_insertAR(route, obj_val, istance, tabu, stall):
+    start_time = time.time()  # Inizio conteggio tempo
+    max_runtime = 120         # Tempo massimo in secondi
+
+    current_route = copy.deepcopy(route)
+    current_obj_val  = obj_val
+    iteration = 0
+    extra_info_current_route = []
+
+    best_route = copy.deepcopy(route)
+    best_obj_val = obj_val
+    moves_best = 0
+    extra_info_best_route = []
+
+    tabu_moves = []
+    iteration_without_improvement = 0
+
+    best_tabu = []
+
+    while True:
+        # Controllo tempo massimo
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= max_runtime:
+            print(f"Tempo massimo di {max_runtime}s raggiunto --> Iterazione {iteration}")
+            break
+
+        for i in range(len(current_route)-1, 0, -1):
+            neighborhood = []
+            candidate_route = copy.deepcopy(current_route)
+            node_to_move = candidate_route.pop(i)
+
+            # CREO L'INTORNO
+            for p in range(1, len(candidate_route)+1):
+                if i != p:
+                    tmp_route = copy.deepcopy(candidate_route)
+                    tmp_route.insert(p, node_to_move)
+                    tmp_obj_val = calculate_objective(tmp_route, istance)
+                    neighborhood.append({'route': tmp_route, 'obj_val': tmp_obj_val})
+
+            candidate = min(neighborhood, key=lambda x: x['obj_val'])
+            candidate_route = candidate['route']
+            candidate_obj_val = candidate['obj_val']
+
+            if node_to_move['id'] in tabu_moves:
+                if candidate_obj_val < best_obj_val:
+                    print("CRITERIO ASPIRAZIONE")
+                    best_tabu.append({'fo': candidate_obj_val, 'iteration': iteration + 1})
+                    break
+            else:
+                if len(tabu_moves) == tabu:
+                    tabu_moves.pop()
+                tabu_moves.insert(0, node_to_move['id'])
+                break
+
+        if candidate_obj_val < best_obj_val:
+            best_route = candidate_route
+            best_obj_val = candidate_obj_val
+            moves_best = iteration + 1
+            extra_info_best_route.append({'fo': candidate_obj_val, 'iteration': iteration + 1})
+
+        if candidate_obj_val < current_obj_val:
+            iteration_without_improvement = 0
+        else:
+            iteration_without_improvement += 1
+
+        current_route = candidate_route
+        current_obj_val = candidate_obj_val
+        iteration += 1
+        extra_info_current_route.append({'fo': current_obj_val, 'iteration': iteration})
+
+        if iteration_without_improvement >= stall:
+            print(f"{iteration_without_improvement} iterazioni senza miglioramento --> Iterazione {iteration}")
+            break
+
+    return best_route, best_obj_val, extra_info_current_route, extra_info_best_route, best_tabu
+
+
+# ****************************************
+# SECONDA TABU SEARCH = INFORMATION GUIDED
+# ****************************************
+def information_guided_tabu_searchAR(route, obj_val, istance, tabu, stall):
+    start_time = time.time()  # Inizio del timer
+
+    # STEP 1
+    current_route = copy.deepcopy(route)
+    current_obj_val  = obj_val
+    extra_info_current_route = []
+
+    best_route = copy.deepcopy(route)
+    best_obj_val = obj_val
+    extra_info_best_route = []
+
+    tabu_moves = []
+    iteration_without_improvement = 0
+    iteration = 0
+
+    best_tabu = []
+
+    while True:
+        # Condizione di tempo massimo (120 secondi)
+        if time.time() - start_time > 120:
+            print("Tempo massimo raggiunto (120s)")
+            break
+
+        current_route_sorted = sorted(
+            current_route[1:],
+            key=lambda x: (-x["idle_tardiness"][0], -x["idle_tardiness"][1] if x["idle_tardiness"][0] == 0 else 0)
+        )
+
+        for i in range(0, len(current_route_sorted)):
+            node_to_move = current_route_sorted[i]
+            index_node_to_move = current_route.index(node_to_move)
+            tmp_route = copy.deepcopy(current_route)
+            tmp_route.pop(index_node_to_move)
+
+            neighborhood = []
+            for i in range(1, len(tmp_route) + 1):
+                if i != index_node_to_move:
+                    candidate_route = copy.deepcopy(tmp_route)
+                    candidate_route.insert(i, node_to_move)
+                    obj_val_candidate_route = calculate_objective(candidate_route, istance)
+                    neighborhood.append({
+                        'route': candidate_route,
+                        'obj_val': obj_val_candidate_route
+                    })
+
+            candidate = min(neighborhood, key=lambda x: x['obj_val'])
+            candidate_route = candidate['route']
+            candidate_obj_val = candidate['obj_val']
+
+            if node_to_move['id'] in tabu_moves:
+                if candidate_obj_val < best_obj_val:
+                    print("CRITERIO ASPIRAZIONE")
+                    best_tabu.append({'fo': candidate_obj_val, 'iteration': iteration + 1})
+                    break
+            else:
+                if len(tabu_moves) == tabu:
+                    tabu_moves.pop()
+                tabu_moves.insert(0, node_to_move['id'])
+                break
+
+        if candidate_obj_val < best_obj_val:
+            best_route = candidate_route
+            best_obj_val = candidate_obj_val
+            extra_info_best_route.append({'fo': candidate_obj_val, 'iteration': iteration + 1})
+
+        if candidate_obj_val < current_obj_val:
+            iteration_without_improvement = 0
+        else:
+            iteration_without_improvement += 1
+
+        current_route = candidate_route
+        current_obj_val = candidate_obj_val
+        iteration += 1
+        extra_info_current_route.append({'fo': current_obj_val, 'iteration': iteration})
+
+        # Condizione di uscita per stagnazione
+        if iteration_without_improvement >= stall:
+            break
+
+    return best_route, best_obj_val, extra_info_current_route, extra_info_best_route, best_tabu
 
 
 # ********************************
@@ -601,3 +772,63 @@ def call_LocalSearch(n=5, max_coordinate=100, max_opening_time=10, seed_coordina
                   plt.show()
             else:
               return local_search, LS_extra_info
+            
+
+# *************************************
+# FUNZIONE DI STAMPA DELLE TABU SEARCH
+# *************************************
+def call_tabu_searchA(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=None, seed_opening_times=None, greedy = 'greedy_minimum_opening_time', tabu_search= 'tabu_search_city_insert',tabu_size = 10,iteration_without_improvement=5, plot="YES"):
+      function = {
+          'greedy_minimum_opening_time' : greedy_minimum_opening_time,
+          'greedy_minimum_distance_from_zero' : greedy_minimum_distance_from_zero,
+          'nn_greedy' : nn_greedy,
+          #'tabu_search_city_insert' : tabu_search_city_insert,
+          #'information_guided_tabu_search' : information_guided_tabu_search,
+          #'tabu_search_city_insertA' : tabu_search_city_insertA,
+          #'information_guided_tabu_searchA' : information_guided_tabu_searchA,
+          'tabu_search_city_insertAR' : tabu_search_city_insertAR,
+          'information_guided_tabu_searchAR' : information_guided_tabu_searchAR
+
+      }
+
+      if greedy in function and tabu_search in function:
+            instance =  generate_tsp_instance(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times)
+            sol_greedy = function[greedy](instance)
+            sol_greedy_val = calculate_objective(sol_greedy,instance)
+            route_tabu, val_route_tabu, extra_current, extra_best, best_tabu = function[tabu_search](sol_greedy,sol_greedy_val,instance,tabu_size,iteration_without_improvement)
+
+
+            if plot is not None:
+                  plt.figure(figsize=(18, 6))
+
+                  plt.subplot(1, 3, 1)
+                  plot_tsp_nodes_link_nofigure(sol_greedy,greedy,str(sol_greedy_val))
+
+                  plt.subplot(1, 3, 2)
+                  plot_tsp_nodes_link_nofigure(route_tabu,tabu_search,str(val_route_tabu))
+
+                  plt.subplot(1, 3, 3)
+                  iteration = [d['iteration'] for d in extra_current]
+                  fo_current = [d['fo'] for d in extra_current]
+                  iteration_best = [d['iteration'] for d in extra_best]
+                  fo_best = [d['fo'] for d in extra_best]
+
+                  iteration_tabu = [d['iteration'] for d in best_tabu]
+                  fo_tabu = [d['fo'] for d in best_tabu]
+
+                  plt.scatter(0, sol_greedy_val, color='red',s=30, label="Greedy value")
+                  plt.plot([0, iteration[0]], [sol_greedy_val, fo_current[0]], color='b', linestyle='-')
+                  sns.lineplot(x=iteration, y=fo_current, marker='o', linestyle='-', markersize=4,markeredgewidth=0, color='b',label="FO Value")
+                  sns.lineplot(x=iteration_best, y=fo_best, marker='o', linestyle=':', color='g',markersize=6,markeredgewidth=0, label="Best candidate Trend")
+                  sns.lineplot(x=iteration_tabu, y=fo_tabu, marker='o', linestyle='', color='m',markersize=8,markeredgewidth=0, label="Tabu")
+
+                  plt.title(f"Trend FO - Iteration {extra_current[-1]['iteration']}")
+                  plt.xlabel("iteration")
+                  plt.ylabel("FO Val")
+
+                  plt.legend()
+                  plt.grid(True)
+                  plt.tight_layout()
+                  plt.show()
+            else:
+              return route_tabu, val_route_tabu
