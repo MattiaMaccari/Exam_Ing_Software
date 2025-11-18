@@ -109,8 +109,8 @@ def main():
     #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insertT')
 
     # STAMPO I RISULTATI DELLE TABU SEARCH
-    call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'information_guided_tabu_searchAR',15,3)
-    call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'tabu_search_city_insertAR',15,4)
+    #call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'information_guided_tabu_searchAR',15,3)
+    #call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'tabu_search_city_insertAR',15,4)
 
 
     plt.show()
@@ -679,6 +679,68 @@ def information_guided_tabu_searchAR(route, obj_val, istance, tabu, stall):
 
     return best_route, best_obj_val, extra_info_current_route, extra_info_best_route, best_tabu
 
+# ***********************
+# ITERATED LOCAL SEARCH
+# ***********************
+def IT_LS_INFORMATION_GUIDED(istance, max_iterations):
+    iterations_counter = 0
+    extra_info_current_route = []
+
+    solution_greedy = greedy_minimum_opening_time(istance)
+    val_solution_greedy = calculate_objective(solution_greedy,istance)
+    extra_info_current_route.append({'fo': val_solution_greedy, 'iteration': iterations_counter})
+    iterations_counter += 1
+
+    solution_ls, val_solution_ls,_,_ = LS_swap_adjacent(solution_greedy,val_solution_greedy,istance)
+    extra_info_current_route.append({'fo': val_solution_ls, 'iteration': iterations_counter})
+    iterations_counter += 1
+
+    best_obj = val_solution_ls
+    best_route = solution_ls
+
+    current_route = solution_greedy
+
+    while iterations_counter < max_iterations:
+        new_route = modify_sequence(current_route,best_route)
+        new_obj = calculate_objective(new_route, istance)
+        extra_info_current_route.append({'fo': new_obj, 'iteration': iterations_counter})
+        iterations_counter +=1
+
+        new_route, new_obj, _,_ = LS_swap_adjacent(new_route, new_obj, istance)
+        extra_info_current_route.append({'fo': new_obj, 'iteration': iterations_counter})
+        iterations_counter +=1
+
+        if [n['id'] for n in new_route] != [n['id'] for n in best_route]:
+            if new_obj < best_obj:
+                best_route = new_route
+                best_obj = new_obj
+            current_route = new_route
+        else:
+          current_route = modify_sequence(current_route,new_route)
+
+    return best_route, best_obj, extra_info_current_route
+
+# MOSSA DI DIVERSIFICAZIONE DELLA ITERATED LOCAL SEARCH
+def modify_sequence(route1, route2):
+    import random
+    import copy
+
+    new_list = copy.deepcopy(route2)
+    base_id = route2[0]['id']
+
+    num_changes = random.randint(1, 3)
+
+    for _ in range(num_changes):
+        i = random.randint(1, len(new_list) - 2)
+        j = random.randint(i + 1, len(new_list) - 1)
+
+        if random.random() < 0.5:
+            new_list[i], new_list[j] = new_list[j], new_list[i]
+        else:
+            new_list[i:j] = reversed(new_list[i:j])
+
+    return new_list
+
 
 # ********************************
 # FUNZIONI DI STAMPA DELLE GREEDY
@@ -832,3 +894,87 @@ def call_tabu_searchA(n=5, max_coordinate=100, max_opening_time=10, seed_coordin
                   plt.show()
             else:
               return route_tabu, val_route_tabu
+              
+
+# **********************************************
+# FUNZIONE DI STAMPA DELLA ITERATED LOCAL SEARCH
+# **********************************************
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Genera istanza e soluzione
+nodes = generate_tsp_instance(n=50, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
+sol, sol_obj, extra_info = IT_LS_INFORMATION_GUIDED(nodes, 180)
+#print(extra_info)
+
+# Estrai dati
+iteration = [d['iteration'] for d in extra_info]
+fo_current = [d['fo'] for d in extra_info]
+
+# Trova indice del valore minimo di FO (best solution)
+min_fo = min(fo_current)
+min_index = fo_current.index(min_fo)
+
+# Valori per la nuvoletta riassuntiva
+greedy_fo = fo_current[0]
+starting_ls_fo = fo_current[1]
+best_solution_fo = min_fo
+
+# Plot
+plt.figure(figsize=(12, 6))
+
+# Linea generale
+sns.lineplot(x=iteration, y=fo_current, marker='o', linestyle='-', color='b', label="FO Value")
+
+# Evidenzia i punti chiave
+plt.scatter(iteration[0], fo_current[0], color='r', s=100, label="GREEDY F.O.", zorder=3)
+plt.scatter(iteration[1], fo_current[1], color='g', s=100, label="STARTING LS F.O.", zorder=3)
+plt.scatter(iteration[min_index], min_fo, color='orange', s=100, label="BEST SOLUTION", zorder=3)
+
+# Annotazioni migliorate
+plt.annotate("GREEDY F.O.",
+             (iteration[0], fo_current[0]),
+             xytext=(iteration[0] + 0.8, fo_current[0] + 200),
+             textcoords='data',
+             fontsize=11,
+             color='black',
+             bbox=dict(boxstyle="round,pad=0.3", edgecolor='r', facecolor="white"),
+             arrowprops=dict(arrowstyle="->", color='r'))
+
+plt.annotate("STARTING LS F.O.",
+             (iteration[1], fo_current[1]),
+             xytext=(iteration[1] + 0.8, fo_current[1] - 300),
+             textcoords='data',
+             fontsize=11,
+             color='black',
+             bbox=dict(boxstyle="round,pad=0.3", edgecolor='g', facecolor="white"),
+             arrowprops=dict(arrowstyle="->", color='g'))
+
+plt.annotate("BEST SOLUTION",
+             (iteration[min_index], min_fo),
+             xytext=(iteration[min_index] + 1.2, min_fo + 200),
+             textcoords='data',
+             fontsize=11,
+             color='black',
+             bbox=dict(boxstyle="round,pad=0.3", edgecolor='orange', facecolor="white"),
+             arrowprops=dict(arrowstyle="->", color='orange'))
+
+# Box di testo riassuntivo (uso coordinate relative all'asse invece che alla figura)
+summary_text = f"""Summary:
+- Greedy FO: {greedy_fo}
+- Starting LS FO: {starting_ls_fo}
+- Best Solution FO: {best_solution_fo}"""
+
+plt.gca().text(0.98, 0.95, summary_text, fontsize=10,
+               ha='right', va='top',
+               transform=plt.gca().transAxes,
+               bbox=dict(boxstyle="round,pad=0.4", facecolor="whitesmoke", edgecolor="gray"))
+
+# Titoli e label
+plt.title(f"Trend FO - Iteration {extra_info[-1]['iteration']}")
+plt.xlabel("Iteration")
+plt.ylabel("FO Value")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
