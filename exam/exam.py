@@ -901,79 +901,69 @@ def call_tabu_searchA(n=5, max_coordinate=100, max_opening_time=10, seed_coordin
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Genera istanza e soluzione
-nodes = generate_tsp_instance(n=50, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
-sol, sol_obj, extra_info = IT_LS_INFORMATION_GUIDED(nodes, 180)
-#print(extra_info)
+def print_iterated_local_search():
 
-# Estrai dati
-iteration = [d['iteration'] for d in extra_info]
-fo_current = [d['fo'] for d in extra_info]
-
-# Trova indice del valore minimo di FO (best solution)
-min_fo = min(fo_current)
-min_index = fo_current.index(min_fo)
-
-# Valori per la nuvoletta riassuntiva
-greedy_fo = fo_current[0]
-starting_ls_fo = fo_current[1]
-best_solution_fo = min_fo
-
-# Plot
-plt.figure(figsize=(12, 6))
-
-# Linea generale
-sns.lineplot(x=iteration, y=fo_current, marker='o', linestyle='-', color='b', label="FO Value")
-
-# Evidenzia i punti chiave
-plt.scatter(iteration[0], fo_current[0], color='r', s=100, label="GREEDY F.O.", zorder=3)
-plt.scatter(iteration[1], fo_current[1], color='g', s=100, label="STARTING LS F.O.", zorder=3)
-plt.scatter(iteration[min_index], min_fo, color='orange', s=100, label="BEST SOLUTION", zorder=3)
-
-# Annotazioni migliorate
-plt.annotate("GREEDY F.O.",
-             (iteration[0], fo_current[0]),
-             xytext=(iteration[0] + 0.8, fo_current[0] + 200),
-             textcoords='data',
-             fontsize=11,
-             color='black',
-             bbox=dict(boxstyle="round,pad=0.3", edgecolor='r', facecolor="white"),
-             arrowprops=dict(arrowstyle="->", color='r'))
-
-plt.annotate("STARTING LS F.O.",
-             (iteration[1], fo_current[1]),
-             xytext=(iteration[1] + 0.8, fo_current[1] - 300),
-             textcoords='data',
-             fontsize=11,
-             color='black',
-             bbox=dict(boxstyle="round,pad=0.3", edgecolor='g', facecolor="white"),
-             arrowprops=dict(arrowstyle="->", color='g'))
-
-plt.annotate("BEST SOLUTION",
-             (iteration[min_index], min_fo),
-             xytext=(iteration[min_index] + 1.2, min_fo + 200),
-             textcoords='data',
-             fontsize=11,
-             color='black',
-             bbox=dict(boxstyle="round,pad=0.3", edgecolor='orange', facecolor="white"),
-             arrowprops=dict(arrowstyle="->", color='orange'))
-
-# Box di testo riassuntivo (uso coordinate relative all'asse invece che alla figura)
-summary_text = f"""Summary:
-- Greedy FO: {greedy_fo}
-- Starting LS FO: {starting_ls_fo}
-- Best Solution FO: {best_solution_fo}"""
-
-plt.gca().text(0.98, 0.95, summary_text, fontsize=10,
-               ha='right', va='top',
-               transform=plt.gca().transAxes,
-               bbox=dict(boxstyle="round,pad=0.4", facecolor="whitesmoke", edgecolor="gray"))
-
-# Titoli e label
-plt.title(f"Trend FO - Iteration {extra_info[-1]['iteration']}")
-plt.xlabel("Iteration")
-plt.ylabel("FO Value")
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+    # Genera istanza e soluzione
+    nodes = generate_tsp_instance(n=50, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
+    sol, sol_obj, extra_info = IT_LS_INFORMATION_GUIDED(nodes, 180)
+    #print(extra_info)
+    # Estrai dati
+    iteration = [d['iteration'] for d in extra_info]
+    fo_current = [d['fo'] for d in extra_info]
+    # Trova indice del valore minimo di FO (best solution)
+    min_fo = min(fo_current)
+    min_index = fo_current.index(min_fo)
+    # Valori per la nuvoletta riassuntiva
+    greedy_fo = fo_current[0]
+    starting_ls_fo = fo_current[1]
+    best_solution_fo = min_fo
+    # Plot
+    plt.figure(figsize=(12, 6))
+    # Linea generale
+    sns.lineplot(x=iteration, y=fo_current, marker='o', linestyle='-', color='b', label="FO Value")
+    # Evidenzia i punti chiave
+    plt.scatter(iteration[0], fo_current[0], color='r', s=100, label="GREEDY F.O.", zorder=3)
+    plt.scatter(iteration[1], fo_current[1], color='g', s=100, label="STARTING LS F.O.", zorder=3)
+    plt.scatter(iteration[min_index], min_fo, color='orange', s=100, label="BEST SOLUTION", zorder=3)
+    # Annotazioni migliorate
+    plt.annotate("GREEDY F.O.",
+                 (iteration[0], fo_current[0]),
+                 xytext=(iteration[0] + 0.8, fo_current[0] + 200),
+                 textcoords='data',
+                 fontsize=11,
+                 color='black',
+                 bbox=dict(boxstyle="round,pad=0.3", edgecolor='r', facecolor="white"),
+                 arrowprops=dict(arrowstyle="->", color='r'))
+    plt.annotate("STARTING LS F.O.",
+                 (iteration[1], fo_current[1]),
+                 xytext=(iteration[1] + 0.8, fo_current[1] - 300),
+                 textcoords='data',
+                 fontsize=11,
+                 color='black',
+                 bbox=dict(boxstyle="round,pad=0.3", edgecolor='g', facecolor="white"),
+                 arrowprops=dict(arrowstyle="->", color='g'))
+    plt.annotate("BEST SOLUTION",
+                 (iteration[min_index], min_fo),
+                 xytext=(iteration[min_index] + 1.2, min_fo + 200),
+                 textcoords='data',
+                 fontsize=11,
+                 color='black',
+                 bbox=dict(boxstyle="round,pad=0.3", edgecolor='orange', facecolor="white"),
+                 arrowprops=dict(arrowstyle="->", color='orange'))
+    # Box di testo riassuntivo (uso coordinate relative all'asse invece che alla figura)
+    summary_text = f"""Summary:
+    - Greedy FO: {greedy_fo}
+    - Starting LS FO: {starting_ls_fo}
+    - Best Solution FO: {best_solution_fo}"""
+    plt.gca().text(0.98, 0.95, summary_text, fontsize=10,
+                   ha='right', va='top',
+                   transform=plt.gca().transAxes,
+                   bbox=dict(boxstyle="round,pad=0.4", facecolor="whitesmoke", edgecolor="gray"))
+    # Titoli e label
+    plt.title(f"Trend FO - Iteration {extra_info[-1]['iteration']}")
+    plt.xlabel("Iteration")
+    plt.ylabel("FO Value")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()

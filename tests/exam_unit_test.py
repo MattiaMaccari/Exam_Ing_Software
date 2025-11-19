@@ -342,6 +342,7 @@ def build_node(id, opening_time, coordinates, distance_vector):
     }
 
 def test_LSH_city_insert_improves_solution():
+    print("Test eseguito")
     # Distanze simmetriche tra 5 nodi
     d0 = np.array([0, 4, 8, 6, 9])
     d1 = np.array([4, 0, 5, 7, 6])
@@ -394,7 +395,7 @@ def build_node(id, opening_time, coordinates, distance_vector):
         'idle_tardiness': (0, 0)
     }
 
-def test_LSH_city_insert_improves_solution():
+def test_LSH_city_insertT_improves_solution():
     # Distanze simmetriche tra 5 nodi
     d0 = np.array([0, 4, 8, 6, 9])
     d1 = np.array([4, 0, 5, 7, 6])
@@ -429,5 +430,126 @@ def test_LSH_city_insert_improves_solution():
 
     # Verifica che ogni nodo abbia idle_tardiness aggiornato
     for node in new_route:
+        assert isinstance(node['idle_tardiness'], tuple)
+        assert len(node['idle_tardiness']) == 2
+
+
+# TESTO LA PRIMA TABU SEARCH
+#istance = generate_tsp_instance(n=10, max_coordinate=200, seed_coordinates=3, seed_opening_times=4)
+#route = greedy_minimum_opening_time(istance)
+from exam.exam import tabu_search_city_insertAR
+
+def build_node(id, opening_time, coordinates, distance_vector):
+    return {
+        'id': id,
+        'opening_time': opening_time,
+        'coordinates': coordinates,
+        'distance_vector': distance_vector,
+        'idle_tardiness': (0, 0)
+    }
+
+def test_tabu_search_city_insertAR_improves_solution():
+    # Distanze simmetriche tra 5 nodi
+    d0 = np.array([0, 4, 8, 6, 9])
+    d1 = np.array([4, 0, 5, 7, 6])
+    d2 = np.array([8, 5, 0, 3, 4])
+    d3 = np.array([6, 7, 3, 0, 2])
+    d4 = np.array([9, 6, 4, 2, 0])
+
+    istance = [
+        build_node(0, 0, (0, 0), d0),   # base
+        build_node(1, 5, (1, 1), d1),
+        build_node(2, 10, (2, 2), d2),
+        build_node(3, 15, (3, 3), d3),
+        build_node(4, 20, (4, 4), d4)
+    ]
+    # Route iniziale subottimale: base → 4 → 3 → 2 → 1
+    route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
+
+    # Calcolo valore obiettivo iniziale
+    obj_val = calculate_objective(route, istance)
+
+    # Parametri Tabu
+    tabu = 3
+    stall = 10
+
+    # Applico Tabu Search
+    best_route, best_obj_val, info_current, info_best, best_tabu = tabu_search_city_insertAR(
+        route, obj_val, istance, tabu, stall
+    )
+
+    # Lista contenente tutti i nodi
+    listsorted = list(range(5))
+
+    # Verifiche
+    assert best_obj_val is not None
+    assert best_obj_val <= obj_val
+    assert isinstance(info_current, list)
+    assert isinstance(info_best, list)
+    assert isinstance(best_tabu, list)
+    assert [n['id'] for n in best_route][0] == 0  # parte dalla base
+    assert sorted([n['id'] for n in best_route]) == listsorted  # tutti i nodi presenti
+
+    # Verifica che ogni nodo abbia idle_tardiness aggiornato
+    for node in best_route:
+        assert isinstance(node['idle_tardiness'], tuple)
+        assert len(node['idle_tardiness']) == 2
+
+
+# TEST DELLA SECONDA TABU SEARCH
+
+from exam.exam import information_guided_tabu_searchAR
+
+def build_node(id, opening_time, coordinates, distance_vector):
+    return {
+        'id': id,
+        'opening_time': opening_time,
+        'coordinates': coordinates,
+        'distance_vector': distance_vector,
+        'idle_tardiness': (0, 0)
+    }
+
+def test_information_guided_tabu_searchAR_improves_solution():
+    # Distanze simmetriche tra 5 nodi
+    d0 = np.array([0, 4, 8, 6, 9])
+    d1 = np.array([4, 0, 5, 7, 6])
+    d2 = np.array([8, 5, 0, 3, 4])
+    d3 = np.array([6, 7, 3, 0, 2])
+    d4 = np.array([9, 6, 4, 2, 0])
+
+    istance = [
+        build_node(0, 0, (0, 0), d0),   # base
+        build_node(1, 5, (1, 1), d1),
+        build_node(2, 10, (2, 2), d2),
+        build_node(3, 15, (3, 3), d3),
+        build_node(4, 20, (4, 4), d4)
+    ]
+
+    # Route iniziale subottimale: base → 4 → 3 → 2 → 1
+    route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
+
+    # Calcolo valore obiettivo iniziale
+    obj_val = calculate_objective(route, istance)
+
+    # Parametri Tabu
+    tabu = 3
+    stall = 10
+
+    # Applico Tabu Search guidata
+    best_route, best_obj_val, info_current, info_best, best_tabu = information_guided_tabu_searchAR(
+        route, obj_val, istance, tabu, stall
+    )
+
+    # Verifiche
+    assert best_obj_val is not None
+    assert best_obj_val <= obj_val
+    assert isinstance(info_current, list)
+    assert isinstance(info_best, list)
+    assert isinstance(best_tabu, list)
+    assert [n['id'] for n in best_route][0] == 0  # parte dalla base
+    assert sorted([n['id'] for n in best_route]) == [0, 1, 2, 3, 4]  # tutti i nodi presenti
+
+    # Verifica che ogni nodo abbia idle_tardiness aggiornato
+    for node in best_route:
         assert isinstance(node['idle_tardiness'], tuple)
         assert len(node['idle_tardiness']) == 2
