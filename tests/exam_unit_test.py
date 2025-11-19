@@ -109,7 +109,6 @@ def test_plot_tsp_nodes():
 # TESTO LA FUNZIONE CHE CALCOLA IL VALORE DELLA FUNZIONE OBBIETTIVO
 
 # tests/test_calculate_objective.py
-import numpy as np
 from exam.exam import calculate_objective
 
 def build_node(id, opening_time, coordinates, distance_vector):
@@ -171,7 +170,6 @@ def test_node_not_included():
 # TEST DELLA PRIMA PROCEDURA GREEDY
 
 from exam.exam import greedy_minimum_opening_time
-import numpy as np
 
 def test_greedy_minimum_opening_time():
     # Creo 3 nodi con tempi di apertura diversi
@@ -208,7 +206,6 @@ def test_greedy_minimum_opening_time():
 
 # TESTO IL FUNZIONAMENTO DELLA SECONDA GREEDY
 from exam.exam import greedy_minimum_distance_from_zero
-import numpy as np
 
 def test_greedy_minimum_distance_from_zero():
     # Creo 3 nodi con distanze diverse rispetto al nodo 0
@@ -241,3 +238,196 @@ def test_greedy_minimum_distance_from_zero():
     assert route[0]['idle_tardiness'] == (0, 0)
     assert isinstance(route[1]['idle_tardiness'], tuple)
     assert isinstance(route[2]['idle_tardiness'], tuple)
+
+
+# TESTO IL FUNZIONAMENTO DELLA TERZA GREEDY
+
+from exam.exam import nn_greedy
+
+def test_nn_greedy_order_and_idle_tardiness():
+    # Definizione dei nodi
+    node0 = {
+        'id': 0,
+        'opening_time': 0,
+        'coordinates': (0, 0),
+        'distance_vector': np.array([0, 5, 10])
+    }
+    node1 = {
+        'id': 1,
+        'opening_time': 5,
+        'coordinates': (1, 1),
+        'distance_vector': np.array([5, 0, 3])
+    }
+    node2 = {
+        'id': 2,
+        'opening_time': 12,
+        'coordinates': (2, 2),
+        'distance_vector': np.array([10, 3, 0])
+    }
+
+    nodes = [node2, node0, node1]  # ordine mescolato
+    route = nn_greedy(nodes)
+
+    # Verifica ordine atteso: parte da 0, poi va al più vicino (1), poi 2
+    expected_order = [2, 1, 0]
+    actual_order = [n['id'] for n in route]
+    assert actual_order == expected_order, f"Ordine atteso {expected_order}, ottenuto {actual_order}"
+
+    # Verifica che ogni nodo abbia idle_tardiness
+    for node in route:
+        assert 'idle_tardiness' in node
+        assert isinstance(node['idle_tardiness'], tuple)
+
+
+# TESTO LA LOCAL SEARCH SWAP ADJACENT
+from exam.exam import LS_swap_adjacent
+
+def build_node(id, opening_time, coordinates, distance_vector):
+    return {
+        'id': id,
+        'opening_time': opening_time,
+        'coordinates': coordinates,
+        'distance_vector': distance_vector,
+        'idle_tardiness': (0, 0)
+    }
+
+def test_LS_swap_adjacent_improves_solution():
+    # Distanze simmetriche tra 5 nodi
+    d0 = np.array([0, 4, 8, 6, 9])
+    d1 = np.array([4, 0, 5, 7, 6])
+    d2 = np.array([8, 5, 0, 3, 4])
+    d3 = np.array([6, 7, 3, 0, 2])
+    d4 = np.array([9, 6, 4, 2, 0])
+
+    istance = [
+        build_node(0, 0, (0, 0), d0),   # base
+        build_node(1, 5, (1, 1), d1),
+        build_node(2, 10, (2, 2), d2),
+        build_node(3, 15, (3, 3), d3),
+        build_node(4, 20, (4, 4), d4)
+    ]
+
+    # Route iniziale subottimale: base → 4 → 3 → 2 → 1
+    route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
+
+    # Calcolo valore obiettivo iniziale
+    obj_val = calculate_objective(route, istance)
+
+    # Applico local search
+    new_route, new_obj_val, moves, info = LS_swap_adjacent(route, obj_val, istance)
+
+    # Verifiche
+    assert new_obj_val is not None
+    assert new_obj_val < obj_val
+    assert moves >= 1
+    assert isinstance(info, list)
+    assert [n['id'] for n in new_route][0] == 0  # parte dalla base
+    assert sorted([n['id'] for n in new_route]) == [0, 1, 2, 3, 4]  # tutti i nodi presenti
+
+    for node in new_route:
+        assert isinstance(node['idle_tardiness'], tuple)
+        assert len(node['idle_tardiness']) == 2
+
+
+# TEST DELLA SECONDA PROCEDURA DI LOCAL SEARCH
+from exam.exam import LSH_city_insert
+
+def build_node(id, opening_time, coordinates, distance_vector):
+    return {
+        'id': id,
+        'opening_time': opening_time,
+        'coordinates': coordinates,
+        'distance_vector': distance_vector,
+        'idle_tardiness': (0, 0)
+    }
+
+def test_LSH_city_insert_improves_solution():
+    # Distanze simmetriche tra 5 nodi
+    d0 = np.array([0, 4, 8, 6, 9])
+    d1 = np.array([4, 0, 5, 7, 6])
+    d2 = np.array([8, 5, 0, 3, 4])
+    d3 = np.array([6, 7, 3, 0, 2])
+    d4 = np.array([9, 6, 4, 2, 0])
+
+    istance = [
+        build_node(0, 0, (0, 0), d0),   # base
+        build_node(1, 5, (1, 1), d1),
+        build_node(2, 10, (2, 2), d2),
+        build_node(3, 15, (3, 3), d3),
+        build_node(4, 20, (4, 4), d4)
+    ]
+
+    # Route iniziale subottimale: base → 4 → 3 → 2 → 1
+    route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
+
+    # Calcolo valore obiettivo iniziale
+    obj_val = calculate_objective(route, istance)
+
+    # Applico local search con H=2
+    new_route, new_obj_val, moves, info = LSH_city_insert(route, obj_val, istance, H=2)
+
+    # Verifiche
+    assert new_obj_val is not None
+    assert new_obj_val < obj_val
+    assert moves >= 1
+    assert isinstance(info, list)
+    assert [n['id'] for n in new_route][0] == 0  # parte dalla base
+    assert sorted([n['id'] for n in new_route]) == [0, 1, 2, 3, 4]  # tutti i nodi presenti
+
+    # Verifica che ogni nodo abbia idle_tardiness aggiornato
+    for node in new_route:
+        assert isinstance(node['idle_tardiness'], tuple)
+        assert len(node['idle_tardiness']) == 2
+
+
+
+# TEST DELLA TERZA PROCEDURA DI LOCAL SEARCH
+
+from exam.exam import LSH_city_insertT
+
+def build_node(id, opening_time, coordinates, distance_vector):
+    return {
+        'id': id,
+        'opening_time': opening_time,
+        'coordinates': coordinates,
+        'distance_vector': distance_vector,
+        'idle_tardiness': (0, 0)
+    }
+
+def test_LSH_city_insert_improves_solution():
+    # Distanze simmetriche tra 5 nodi
+    d0 = np.array([0, 4, 8, 6, 9])
+    d1 = np.array([4, 0, 5, 7, 6])
+    d2 = np.array([8, 5, 0, 3, 4])
+    d3 = np.array([6, 7, 3, 0, 2])
+    d4 = np.array([9, 6, 4, 2, 0])
+
+    istance = [
+        build_node(0, 0, (0, 0), d0),   # base
+        build_node(1, 5, (1, 1), d1),
+        build_node(2, 10, (2, 2), d2),
+        build_node(3, 15, (3, 3), d3),
+        build_node(4, 20, (4, 4), d4)
+    ]
+
+    # Route iniziale subottimale: base → 4 → 3 → 2 → 1
+    route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
+
+    # Calcolo valore obiettivo iniziale
+    obj_val = calculate_objective(route, istance)
+
+    # Applico local search con H=2
+    new_route, new_obj_val, moves, info = LSH_city_insertT(route, obj_val, istance, H=2)
+
+    # Verifiche
+    assert new_obj_val is not None
+    assert new_obj_val < obj_val
+    assert moves >= 1
+    assert isinstance(info, list)
+    assert [n['id'] for n in new_route][0] == 0  # parte dalla base
+    assert sorted([n['id'] for n in new_route]) == [0, 1, 2, 3, 4]  # tutti i nodi presenti
+
+    # Verifica che ogni nodo abbia idle_tardiness aggiornato
+    for node in new_route:
+        assert isinstance(node['idle_tardiness'], tuple)
+        assert len(node['idle_tardiness']) == 2
