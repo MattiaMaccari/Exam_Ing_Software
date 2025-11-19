@@ -166,3 +166,78 @@ def test_node_not_included():
     ]
     route = [istance[0], istance[1], build_node(99, 0, (0, 0), np.array([0, 0, 0]))]
     assert calculate_objective(route, istance) is None
+
+
+# TEST DELLA PRIMA PROCEDURA GREEDY
+
+from exam.exam import greedy_minimum_opening_time
+import numpy as np
+
+def test_greedy_minimum_opening_time():
+    # Creo 3 nodi con tempi di apertura diversi
+    node0 = {
+        'id': 0,
+        'opening_time': 0,
+        'coordinates': (0, 0),
+        'distance_vector': np.array([0, 5, 10])
+    }
+    node1 = {
+        'id': 1,
+        'opening_time': 5,
+        'coordinates': (1, 1),
+        'distance_vector': np.array([5, 0, 3])
+    }
+    node2 = {
+        'id': 2,
+        'opening_time': 12,
+        'coordinates': (2, 2),
+        'distance_vector': np.array([10, 3, 0])
+    }
+
+    nodes = [node2, node0, node1]  # ordine mescolato
+    route = greedy_minimum_opening_time(nodes)
+
+    # Verifico che l'ordine sia corretto (per opening_time)
+    assert [n['id'] for n in route] == [0, 1, 2]
+
+    # Verifico che idle e tardiness siano calcolati
+    assert route[0]['idle_tardiness'] == (0, 0)
+    assert isinstance(route[1]['idle_tardiness'], tuple)
+    assert isinstance(route[2]['idle_tardiness'], tuple)
+
+
+# TESTO IL FUNZIONAMENTO DELLA SECONDA GREEDY
+from exam.exam import greedy_minimum_distance_from_zero
+import numpy as np
+
+def test_greedy_minimum_distance_from_zero():
+    # Creo 3 nodi con distanze diverse rispetto al nodo 0
+    node0 = {
+        'id': 0,
+        'opening_time': 0,
+        'coordinates': (0, 0),
+        'distance_vector': np.array([0, 5, 10])
+    }
+    node1 = {
+        'id': 1,
+        'opening_time': 5,
+        'coordinates': (1, 1),
+        'distance_vector': np.array([5, 0, 3])
+    }
+    node2 = {
+        'id': 2,
+        'opening_time': 12,
+        'coordinates': (2, 2),
+        'distance_vector': np.array([10, 3, 0])
+    }
+
+    nodes = [node2, node0, node1]  # ordine mescolato
+    route = greedy_minimum_distance_from_zero(nodes)
+
+    # Verifico che l'ordine sia corretto (per distanza da nodo 0)
+    assert [n['id'] for n in route] == [0, 1, 2]
+
+    # Verifico che idle e tardiness siano presenti
+    assert route[0]['idle_tardiness'] == (0, 0)
+    assert isinstance(route[1]['idle_tardiness'], tuple)
+    assert isinstance(route[2]['idle_tardiness'], tuple)
