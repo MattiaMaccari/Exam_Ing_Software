@@ -138,7 +138,6 @@ def plot_tsp_nodes(nodes):
     plt.ylabel("Y Coordinate")
     plt.title("TSP Nodes Visualization")
     plt.grid(True)
-    #plt.show()
 
 
 # ****************************************************
