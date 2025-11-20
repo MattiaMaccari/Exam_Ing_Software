@@ -435,36 +435,36 @@ def test_LSH_city_insertT_improves_solution():
 
 
 # TESTO LA PRIMA TABU SEARCH
-#istance = generate_tsp_instance(n=10, max_coordinate=200, seed_coordinates=3, seed_opening_times=4)
-#route = greedy_minimum_opening_time(istance)
+istance = generate_tsp_instance(n=20, max_coordinate=200, seed_coordinates=3, seed_opening_times=4)
+route = greedy_minimum_opening_time(istance)
 from exam.exam import tabu_search_city_insertAR
 
-def build_node(id, opening_time, coordinates, distance_vector):
-    return {
-        'id': id,
-        'opening_time': opening_time,
-        'coordinates': coordinates,
-        'distance_vector': distance_vector,
-        'idle_tardiness': (0, 0)
-    }
+#def build_node(id, opening_time, coordinates, distance_vector):
+#    return {
+#        'id': id,
+#        'opening_time': opening_time,
+#        'coordinates': coordinates,
+#        'distance_vector': distance_vector,
+#        'idle_tardiness': (0, 0)
+#    }
 
 def test_tabu_search_city_insertAR_improves_solution():
-    # Distanze simmetriche tra 5 nodi
-    d0 = np.array([0, 4, 8, 6, 9])
-    d1 = np.array([4, 0, 5, 7, 6])
-    d2 = np.array([8, 5, 0, 3, 4])
-    d3 = np.array([6, 7, 3, 0, 2])
-    d4 = np.array([9, 6, 4, 2, 0])
+    ## Distanze simmetriche tra 5 nodi
+    #d0 = np.array([0, 4, 8, 6, 9])
+    #d1 = np.array([4, 0, 5, 7, 6])
+    #d2 = np.array([8, 5, 0, 3, 4])
+    #d3 = np.array([6, 7, 3, 0, 2])
+    #d4 = np.array([9, 6, 4, 2, 0])
 
-    istance = [
-        build_node(0, 0, (0, 0), d0),   # base
-        build_node(1, 5, (1, 1), d1),
-        build_node(2, 10, (2, 2), d2),
-        build_node(3, 15, (3, 3), d3),
-        build_node(4, 20, (4, 4), d4)
-    ]
+    #istance = [
+    #    build_node(0, 0, (0, 0), d0),   # base
+    #    build_node(1, 5, (1, 1), d1),
+    #    build_node(2, 10, (2, 2), d2),
+    #    build_node(3, 15, (3, 3), d3),
+    #    build_node(4, 20, (4, 4), d4)
+    #]
     # Route iniziale subottimale: base → 4 → 3 → 2 → 1
-    route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
+    #route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
 
     # Calcolo valore obiettivo iniziale
     obj_val = calculate_objective(route, istance)
@@ -475,11 +475,10 @@ def test_tabu_search_city_insertAR_improves_solution():
 
     # Applico Tabu Search
     best_route, best_obj_val, info_current, info_best, best_tabu = tabu_search_city_insertAR(
-        route, obj_val, istance, tabu, stall
-    )
+        route, obj_val, istance, tabu, stall)
 
     # Lista contenente tutti i nodi
-    listsorted = list(range(5))
+    listsorted = list(range(20))
 
     # Verifiche
     assert best_obj_val is not None
@@ -500,6 +499,67 @@ def test_tabu_search_city_insertAR_improves_solution():
 
 from exam.exam import information_guided_tabu_searchAR
 
+#def build_node(id, opening_time, coordinates, distance_vector):
+#    return {
+#        'id': id,
+#        'opening_time': opening_time,
+#        'coordinates': coordinates,
+#        'distance_vector': distance_vector,
+#        'idle_tardiness': (0, 0)
+#    }
+
+def test_information_guided_tabu_searchAR_improves_solution():
+    # Distanze simmetriche tra 5 nodi
+    #d0 = np.array([0, 4, 8, 6, 9])
+    #d1 = np.array([4, 0, 5, 7, 6])
+    #d2 = np.array([8, 5, 0, 3, 4])
+    #d3 = np.array([6, 7, 3, 0, 2])
+    #d4 = np.array([9, 6, 4, 2, 0])
+
+    #istance = [
+    #    build_node(0, 0, (0, 0), d0),   # base
+    #    build_node(1, 5, (1, 1), d1),
+    #    build_node(2, 10, (2, 2), d2),
+    #    build_node(3, 15, (3, 3), d3),
+    #    build_node(4, 20, (4, 4), d4)
+    #]
+
+    # Route iniziale subottimale: base → 4 → 3 → 2 → 1
+    #route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
+
+    # Calcolo valore obiettivo iniziale
+    obj_val = calculate_objective(route, istance)
+
+    # Parametri Tabu
+    tabu = 3
+    stall = 10
+
+    # Lista contenente tutti i nodi
+    listsorted = list(range(20))
+
+    # Applico Tabu Search guidata
+    best_route, best_obj_val, info_current, info_best, best_tabu = information_guided_tabu_searchAR(
+        route, obj_val, istance, tabu, stall)
+
+    # Verifiche
+    assert best_obj_val is not None
+    assert best_obj_val <= obj_val
+    assert isinstance(info_current, list)
+    assert isinstance(info_best, list)
+    assert isinstance(best_tabu, list)
+    assert [n['id'] for n in best_route][0] == 0  # parte dalla base
+    assert sorted([n['id'] for n in best_route]) == listsorted  # tutti i nodi presenti
+
+    # Verifica che ogni nodo abbia idle_tardiness aggiornato
+    for node in best_route:
+        assert isinstance(node['idle_tardiness'], tuple)
+        assert len(node['idle_tardiness']) == 2
+
+
+# TESTO LA ITERATED LOCAL SEARCH
+
+from exam.exam import IT_LS_INFORMATION_GUIDED
+
 def build_node(id, opening_time, coordinates, distance_vector):
     return {
         'id': id,
@@ -509,7 +569,7 @@ def build_node(id, opening_time, coordinates, distance_vector):
         'idle_tardiness': (0, 0)
     }
 
-def test_information_guided_tabu_searchAR_improves_solution():
+def test_IT_LS_INFORMATION_GUIDED_improves_solution():
     # Distanze simmetriche tra 5 nodi
     d0 = np.array([0, 4, 8, 6, 9])
     d1 = np.array([4, 0, 5, 7, 6])
@@ -525,31 +585,191 @@ def test_information_guided_tabu_searchAR_improves_solution():
         build_node(4, 20, (4, 4), d4)
     ]
 
-    # Route iniziale subottimale: base → 4 → 3 → 2 → 1
-    route = [istance[0], istance[4], istance[3], istance[2], istance[1]]
-
-    # Calcolo valore obiettivo iniziale
-    obj_val = calculate_objective(route, istance)
-
-    # Parametri Tabu
-    tabu = 3
-    stall = 10
-
-    # Applico Tabu Search guidata
-    best_route, best_obj_val, info_current, info_best, best_tabu = information_guided_tabu_searchAR(
-        route, obj_val, istance, tabu, stall
-    )
+    # Applico la procedura iterativa con LS guidata
+    max_iterations = 10
+    best_route, best_obj_val, info = IT_LS_INFORMATION_GUIDED(istance, max_iterations)
 
     # Verifiche
     assert best_obj_val is not None
-    assert best_obj_val <= obj_val
-    assert isinstance(info_current, list)
-    assert isinstance(info_best, list)
-    assert isinstance(best_tabu, list)
+    assert isinstance(info, list)
+    assert len(info) <= max_iterations * 2  # ogni iterazione può aggiungere 2 entry
     assert [n['id'] for n in best_route][0] == 0  # parte dalla base
     assert sorted([n['id'] for n in best_route]) == [0, 1, 2, 3, 4]  # tutti i nodi presenti
 
-    # Verifica che ogni nodo abbia idle_tardiness aggiornato
     for node in best_route:
         assert isinstance(node['idle_tardiness'], tuple)
         assert len(node['idle_tardiness']) == 2
+
+
+
+# TEST DELLA FUNZIONE CALL GREEDY
+
+from exam.exam import call_greedy
+
+def test_call_greedy_returns_solution_and_value():
+    # Parametri controllati
+    n = 5
+    max_coordinate = 50
+    max_opening_time = 20
+    seed_coordinates = 42
+    seed_opening_times = 99
+
+    # Testa le tre greedy disponibili
+    for greedy_name in ['greedy_minimum_opening_time', 'greedy_minimum_distance_from_zero', 'nn_greedy']:
+        sol, val = call_greedy(
+            n=n,
+            max_coordinate=max_coordinate,
+            max_opening_time=max_opening_time,
+            seed_coordinates=seed_coordinates,
+            seed_opening_times=seed_opening_times,
+            greedy=greedy_name,
+            plot=None  # disattiva la stampa
+        )
+
+        # Verifiche
+        assert sol is not None
+        assert isinstance(sol, list)
+        assert len(sol) == n
+        assert val is not None
+        assert isinstance(val, (int, float))
+        assert [node['id'] for node in sol][0] == 0  # parte dalla base
+        assert sorted([node['id'] for node in sol]) == list(range(n))  # tutti i nodi presenti
+
+
+# TEST DELLA FUNZIONE COMPARE GREEDY
+
+from exam.exam import compare_greedy
+import numbers
+
+#def test_compare_greedy_plot_mode_returns_none():
+#    result = compare_greedy(plot="YES")
+#    assert result is None
+
+def test_compare_greedy_returns_three_values():
+    # Parametri controllati per istanza riproducibile
+    n = 5
+    max_coordinate = 50
+    max_opening_time = 20
+    seed_coordinates = 42
+    seed_opening_times = 99
+
+    # Disattiva la stampa grafica
+    val_Gmot, val_Gmdfz, val_Gnn = compare_greedy(
+        n=n,
+        max_coordinate=max_coordinate,
+        max_opening_time=max_opening_time,
+        seed_coordinates=seed_coordinates,
+        seed_opening_times=seed_opening_times,
+        plot=None
+    )
+
+    # Verifiche
+    assert isinstance(val_Gmot, numbers.Number)
+    assert isinstance(val_Gmdfz, numbers.Number)
+    assert isinstance(val_Gnn, numbers.Number)
+
+    # I valori devono essere positivi e finiti
+    assert val_Gmot >= 0
+    assert val_Gmdfz >= 0
+    assert val_Gnn >= 0
+
+from unittest.mock import patch
+def test_compare_greedy_plot_block():
+    with patch("exam.exam.plt.show") as mock_show:
+        compare_greedy(plot="YES")
+        assert mock_show.call_count == 1
+
+
+# TEST DELLA FUNZIONE CHE CHIAMA LA LOCAL SEARCH
+
+from exam.exam import call_LocalSearch
+
+def test_call_LocalSearch_returns_expected_output():
+    # Parametri controllati per istanza riproducibile
+    n = 5
+    max_coordinate = 50
+    max_opening_time = 20
+    seed_coordinates = 42
+    seed_opening_times = 99
+    greedy = 'greedy_minimum_opening_time'
+    local_search = 'LSH_city_insert'
+    H = 1
+
+    # Disattiva la stampa grafica
+    ls_name, extra_info = call_LocalSearch(
+        n=n,
+        max_coordinate=max_coordinate,
+        max_opening_time=max_opening_time,
+        seed_coordinates=seed_coordinates,
+        seed_opening_times=seed_opening_times,
+        greedy=greedy,
+        local_search=local_search,
+        H=H,
+        plot=None
+    )
+
+    # Verifiche
+    assert ls_name == local_search
+    assert isinstance(extra_info, list)
+    assert len(extra_info) > 0
+
+    for entry in extra_info:
+        assert isinstance(entry, dict)
+        assert 'move' in entry
+        assert 'fo' in entry
+        assert isinstance(entry['move'], int)
+        assert isinstance(entry['fo'], numbers.Number)
+
+from unittest.mock import patch
+def test_call_LocalSearch_executes_plot_block():
+    with patch("exam.exam.plt.show") as mock_show:
+        call_LocalSearch(plot="YES")
+        assert mock_show.call_count == 1
+
+
+# TEST DELLA FUNZIONE CHE STAMPA LE TABU SEARCH
+
+from exam.exam import call_tabu_searchA
+import numbers
+
+def test_call_tabu_searchA_returns_valid_solution():
+    # Parametri controllati per istanza riproducibile
+    n = 5
+    max_coordinate = 50
+    max_opening_time = 20
+    seed_coordinates = 42
+    seed_opening_times = 99
+    greedy = 'greedy_minimum_opening_time'
+    tabu_search = 'tabu_search_city_insertAR'
+    tabu_size = 5
+    iteration_without_improvement = 3
+
+    # Disattiva la stampa grafica
+    route, value = call_tabu_searchA(
+        n=n,
+        max_coordinate=max_coordinate,
+        max_opening_time=max_opening_time,
+        seed_coordinates=seed_coordinates,
+        seed_opening_times=seed_opening_times,
+        greedy=greedy,
+        tabu_search=tabu_search,
+        tabu_size=tabu_size,
+        iteration_without_improvement=iteration_without_improvement,
+        plot=None
+    )
+
+    # Verifiche
+    assert route is not None
+    assert isinstance(route, list)
+    assert len(route) == n
+    assert value is not None
+    assert isinstance(value, numbers.Number)
+    assert value >= 0
+    assert [node['id'] for node in route][0] == 0  # parte dalla base
+    assert sorted([node['id'] for node in route]) == list(range(n))  # tutti i nodi presenti
+
+from unittest.mock import patch
+def test_call_tabu_searchA_executes_plot_block():
+    with patch("exam.exam.plt.show") as mock_show:
+        call_tabu_searchA(plot="YES",tabu_search = "tabu_search_city_insertAR")
+        assert mock_show.call_count == 1

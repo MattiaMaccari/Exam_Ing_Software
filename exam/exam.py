@@ -785,7 +785,6 @@ def compare_greedy(n=5, max_coordinate=100, max_opening_time=10, seed_coordinate
 # *************************************
 # FUNZIONI DI STAMPA DELLE LOCAL SEARCH
 # *************************************
-
 def call_LocalSearch(n=5, max_coordinate=100, max_opening_time=10, seed_coordinates=None, seed_opening_times=None, greedy = 'greedy_minimum_opening_time', local_search= 'LSH_city_insert', H=1, plot="YES"):
       function = {
           'greedy_minimum_opening_time' : greedy_minimum_opening_time,
@@ -796,7 +795,7 @@ def call_LocalSearch(n=5, max_coordinate=100, max_opening_time=10, seed_coordina
           'LSH_city_insert' : LSH_city_insert,
           'LSH_city_insertT' : LSH_city_insertT
       }
-
+    
       if greedy in function and local_search in function:
             instance =  generate_tsp_instance(n,max_coordinate,max_opening_time,seed_coordinates,seed_opening_times)
             sol_greedy = function[greedy](instance)
@@ -892,7 +891,7 @@ def call_tabu_searchA(n=5, max_coordinate=100, max_opening_time=10, seed_coordin
                   plt.tight_layout()
                   plt.show()
             else:
-              return route_tabu, val_route_tabu
+                return route_tabu, val_route_tabu
               
 
 # **********************************************
