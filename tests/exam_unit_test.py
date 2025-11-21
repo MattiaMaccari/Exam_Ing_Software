@@ -635,6 +635,8 @@ def test_call_greedy_returns_solution_and_value():
         assert [node['id'] for node in sol][0] == 0  # parte dalla base
         assert sorted([node['id'] for node in sol]) == list(range(n))  # tutti i nodi presenti
 
+import matplotlib
+matplotlib.use("Agg")  # evita GUI
 
 # TEST DELLA FUNZIONE COMPARE GREEDY
 
@@ -771,5 +773,68 @@ def test_call_tabu_searchA_returns_valid_solution():
 from unittest.mock import patch
 def test_call_tabu_searchA_executes_plot_block():
     with patch("exam.exam.plt.show") as mock_show:
-        call_tabu_searchA(plot="YES",tabu_search = "tabu_search_city_insertAR")
-        assert mock_show.call_count == 1
+         call_tabu_searchA(plot="YES",tabu_search = "tabu_search_city_insertAR")
+         assert mock_show.call_count == 1
+
+
+# TEST DELLA FUNZIONE DI STAMPA DELLA ITERATED LOCAL SEARCH
+
+from exam.exam import print_iterated_local_search
+
+def test_print_iterated_local_search_executes_plot_block():
+    # Patchiamo sia plt.show che sns.lineplot per verificare che vengano chiamati
+    with patch("exam.exam.plt.show") as mock_show, \
+         patch("exam.exam.sns.lineplot") as mock_lineplot, \
+         patch("exam.exam.plt.scatter") as mock_scatter:
+
+        print_iterated_local_search()
+
+        # Verifica che il grafico sia stato mostrato
+        mock_show.assert_called_once()
+
+        # Verifica che almeno una linea sia stata tracciata
+        assert mock_lineplot.call_count >= 1
+
+        # Verifica che i punti chiave siano stati evidenziati
+        assert mock_scatter.call_count >= 3
+        plt.close("all")
+
+import warnings
+
+def test_print_iterated_local_search_executes_plot_block():
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        # esegui la funzione
+        print_iterated_local_search()
+
+
+from exam.exam import plot_tsp_nodes_link
+
+def test_plot_tsp_nodes_link_executes_plot_block():
+    # Costruisco un set minimo di nodi
+    nodes = [
+        {"id": 0, "coordinates": (0, 0)},
+        {"id": 1, "coordinates": (10, 10)},
+        {"id": 2, "coordinates": (20, 5)},
+    ]
+
+    with patch("exam.exam.plt.scatter") as mock_scatter, \
+         patch("exam.exam.plt.text") as mock_text, \
+         patch("exam.exam.plt.annotate") as mock_annotate, \
+         patch("exam.exam.plt.figure") as mock_figure:
+
+        plot_tsp_nodes_link(nodes, title="Test Plot", value="123", show=None)
+
+        # Verifica che sia stata creata una figura
+        mock_figure.call_count >= 1
+
+        # Verifica che i nodi siano stati disegnati
+        assert mock_scatter.call_count == len(nodes)
+
+        # Verifica che i nodi diversi da 0 abbiano una label
+        assert mock_text.call_count == len(nodes) - 1
+
+        # Verifica che siano state disegnate le frecce
+        # (len(nodes)-1) collegamenti + 1 collegamento finale
+        expected_arrows = (len(nodes) - 1) + 1
+        assert mock_annotate.call_count == expected_arrows
