@@ -635,8 +635,7 @@ def test_call_greedy_returns_solution_and_value():
         assert [node['id'] for node in sol][0] == 0  # parte dalla base
         assert sorted([node['id'] for node in sol]) == list(range(n))  # tutti i nodi presenti
 
-import matplotlib
-matplotlib.use("Agg")  # evita GUI
+
 
 # TEST DELLA FUNZIONE COMPARE GREEDY
 
@@ -780,33 +779,32 @@ def test_call_tabu_searchA_executes_plot_block():
 # TEST DELLA FUNZIONE DI STAMPA DELLA ITERATED LOCAL SEARCH
 
 from exam.exam import print_iterated_local_search
-
-def test_print_iterated_local_search_executes_plot_block():
-    # Patchiamo sia plt.show che sns.lineplot per verificare che vengano chiamati
-    with patch("exam.exam.plt.show") as mock_show, \
-         patch("exam.exam.sns.lineplot") as mock_lineplot, \
-         patch("exam.exam.plt.scatter") as mock_scatter:
-
-        print_iterated_local_search()
-
-        # Verifica che il grafico sia stato mostrato
-        mock_show.assert_called_once()
-
-        # Verifica che almeno una linea sia stata tracciata
-        assert mock_lineplot.call_count >= 1
-
-        # Verifica che i punti chiave siano stati evidenziati
-        assert mock_scatter.call_count >= 3
-        plt.close("all")
-
 import warnings
-
 def test_print_iterated_local_search_executes_plot_block():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=UserWarning)
-        # esegui la funzione
-        print_iterated_local_search()
+        # Patchiamo sia plt.show che sns.lineplot per verificare che vengano chiamati
+        with patch("exam.exam.plt.show") as mock_show, \
+            patch("exam.exam.sns.lineplot") as mock_lineplot, \
+            patch("exam.exam.plt.scatter") as mock_scatter:
 
+            print_iterated_local_search()
+
+            # Verifica che il grafico sia stato mostrato
+            mock_show.assert_called_once()
+
+            # Verifica che almeno una linea sia stata tracciata
+            assert mock_lineplot.call_count >= 1
+
+            # Verifica che i punti chiave siano stati evidenziati
+            assert mock_scatter.call_count >= 3
+            plt.close("all")
+
+
+
+import matplotlib
+matplotlib.use("Agg")  # evita GUI
+    
 
 from exam.exam import plot_tsp_nodes_link
 
