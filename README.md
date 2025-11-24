@@ -55,7 +55,3 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 - **Iterated Local Search**  
   Una procedura iterativa che applica ripetutamente local search con perturbazioni per uscire da minimi locali.
-
----
-
-## Esecuzione
