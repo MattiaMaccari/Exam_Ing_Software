@@ -1,4 +1,6 @@
 # Progetto TSP
+<details>
+<summary> Apri per vedere la spiegazione </summary>
 
 ## TSP con finestre temporali (TS-TW):
 * A partire dalla base (nodo 0) un tecnico deve rifornire n vending machines poste in n siti diversi, e rientrare alla base.
@@ -6,7 +8,7 @@
 * Se si arriva prima occorre attendere fino all’apertura;
 * Se si arriva al tempo 𝑡_𝑗>𝑡_𝑖 si paga una penale di (𝑡_𝑗−𝑡_𝑖).
 * Noti i tempi di percorrenza da sito a sito e alla base, si determini il tour di costo minimo (durata + penalità) che visita tutti i siti e la base, partendo al tempo 𝑡_0.
-
+</details>
 
 ## Travelling Salesman Problem (TSP)
 
@@ -89,13 +91,40 @@ Nel progetto vengono illustrate le seguenti procedure:
   3. **greedy Nearest Node** costruisce una soluzione eseguendo le seguenti operazioni:
       * Seleziona, per ciascun nodo, il nodo adiacente più vicino.
       * Ad ogni passo, vengono identificati i nodi adiacenti e si sceglie quello con il costo minimo, aggiornando progressivamente la soluzione con decisioni localmente ottimali.
-  
-  
-  
----
-- **Local Search**  
-  Implementazioni delle due varianti di ricerca locale per migliorare le soluzioni greedy.
 
+  <br>
+---
+- **Local Search**
+  1. **Swap Adjacent**  
+  * Strategia: **First Improvement**, cerca di migliorare iterativamente una route scambiando due nodi adiacenti, privilegiando quelli con maggiore idle o tardiness <br>
+
+    <img src="./Images/LS1.png" alt="TSP" width="350">
+
+  <br>
+
+  2. **City Insert**
+  * Strategia: **h Improvement** (la migliore delle h soluzioni che migliorano l'ottimo corrente).
+  * La ricerca nell'intorno procede fino a determinare h miglioramenti.
+  * Intorno ottenuto dalla cancellazione di 1 nodo nella route e dal suo reinserimento in un altro punto (partendo dall’inizio).
+  * I nodi vengono cancellati a partire dalla fine della route.
+  * Il nodo i viene reinserito nella posizione p solo se la sua distanza dal nodo precedente (p-1) o dal nodo iniziale è inferiore a quella del nodo attualmente presente in p.
+  
+    <img src="./Images/LS2.png" alt="TSP" width="350">
+
+  <br>
+
+  3. **City Insert Tail**
+  * Strategia: **h Improvement** (la migliore delle h soluzioni che migliorano l'ottimo corrente).
+  * La ricerca nell'intorno procede fino a determinare h miglioramenti.
+  * Intorno ottenuto dalla cancellazione di 1 nodo nella route e dal suo reinserimento in un altro punto (partendo dalla fine).
+  * I nodi vengono cancellati a partire dalla fine della route.
+  * Il nodo i viene reinserito nella posizione p solo se la sua distanza dal nodo precedente (p-1) o dal nodo iniziale è inferiore a quella del nodo attualmente presente in p.
+
+    <img src="./Images/LS3.png" alt="TSP" width="350">
+  
+  <BR>
+
+---
 - **Tabu Search**  
   Implementazioni delle due varianti di tabu search per esplorare lo spazio delle soluzioni evitando cicli.
 
