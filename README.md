@@ -1,7 +1,32 @@
 # Progetto TSP - Algoritmi Greedy, Local Search e Tabu Search
 
-Questo progetto implementa e confronta diverse strategie di risoluzione del **Travelling Salesman Problem (TSP)**.  
-Il codice è organizzato in moduli che permettono di:
+## TSP con finestre temporali (TS-TW):
+* A partire dalla base (nodo 0) un tecnico deve rifornire n vending machines poste in n siti diversi, e rientrare alla base.
+* Ogni sito i apre al tempo 𝑡_𝑖:
+* Se si arriva prima occorre attendere fino all’apertura;
+* Se si arriva al tempo 𝑡_𝑗>𝑡_𝑖 si paga una penale di (𝑡_𝑗−𝑡_𝑖).
+* Noti i tempi di percorrenza da sito a sito e alla base, si determini il tour di costo minimo (durata + penalità) che visita tutti i siti e la base, partendo al tempo 𝑡_0.
+
+
+## Travelling Salesman Problem (TSP)
+
+Il problema del commesso viaggiatore (TSP – Traveling Salesman Problem) è un problema combinatorio classico noto per essere NP-hard, ovvero non esiste alcun algoritmo noto in grado di risolverlo in tempo polinomiale in tutti i casi. L’obiettivo del TSP consiste nel trovare il ciclo hamiltoniano di costo minimo che visiti ciascun nodo esattamente una volta.
+
+![TSP](./images/tsp.png)
+
+Nel problema del commesso viaggiatore con tempi di apertura, ogni nodo 𝑖 i può essere visitato solo a partire da un determinato istante di apertura 𝑡_𝑖.
+
+Questo vincolo temporale aggiuntivo complica ulteriormente il problema:
+**La presenza di tempi di apertura riduce lo spazio delle soluzioni ammissibili, escludendo molti percorsi che sarebbero validi nel TSP classico.**
+
+Se un nodo viene raggiunto prima del suo tempo di apertura, il commesso deve attendere, introducendo periodi di inattività (**idle time**) che incidono sull’efficienza complessiva del tour.
+
+Dal punto di vista della teoria della complessità, il TSP con tempi di apertura rimane NP-hard come il TSP classico, ma nella pratica risulta più difficile da risolvere per via dei vincoli temporali.
+
+## Struttura del progetto
+
+Questo progetto implementa e confronta diverse strategie di risoluzione del **Travelling Salesman Problem (TSP)**.
+Il seguente codice è organizzato in moduli che permettono di:
 - Generare istanze del problema
 - Applicare algoritmi greedy
 - Applicare tecniche di local search
@@ -9,32 +34,30 @@ Il codice è organizzato in moduli che permettono di:
 - Applicare una iterated local search
 - Visualizzare graficamente le soluzioni
 
----
-
 ## Algoritmi implementati
 
 Nel progetto vengono illustrate le seguenti procedure:
 
-### Greedy (3 procedure)
+#### Greedy (3 procedure)
 1. `greedy_minimum_opening_time`  
 2. `greedy_minimum_distance_from_zero`  
 3. `nn_greedy`  
 
-### Local Search (2 procedure)
+#### Local Search (3 procedure)
 1. `LS_swap_adjacent`  
 2. `LSH_city_insert`
 3. `LSH_city_insertT`
 
-### Tabu Search (2 procedure)
+#### Tabu Search (2 procedure)
 1. `information_guided_tabu_searchAR`  
 2. `tabu_search_city_insertAR`  
 
-### Iterated Local Search (1 procedura)
+#### Iterated Local Search (1 procedura)
 1. `iterated_local_search`  
 
----
 
-## Struttura del progetto
+
+## Spiegazione dei vari moduli
 
 - **Generazione istanze TSP**  
   Funzioni per creare nodi con coordinate casuali, tempi di apertura e matrice delle distanze.
