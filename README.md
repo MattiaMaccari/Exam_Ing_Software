@@ -1,6 +1,4 @@
 # Progetto TSP
-<details>
-<summary> Apri per vedere la spiegazione </summary>
 
 ## TSP con finestre temporali (TS-TW):
 * A partire dalla base (nodo 0) un tecnico deve rifornire n vending machines poste in n siti diversi, e rientrare alla base.
@@ -8,7 +6,6 @@
 * Se si arriva prima occorre attendere fino all’apertura;
 * Se si arriva al tempo 𝑡_𝑗>𝑡_𝑖 si paga una penale di (𝑡_𝑗−𝑡_𝑖).
 * Noti i tempi di percorrenza da sito a sito e alla base, si determini il tour di costo minimo (durata + penalità) che visita tutti i siti e la base, partendo al tempo 𝑡_0.
-</details>
 
 ## Travelling Salesman Problem (TSP)
 
@@ -161,5 +158,5 @@ Nel progetto vengono illustrate le seguenti procedure:
   
     <img src="./Images/MOVE3.png" alt="TSP" width="400">
 <br>
-    
+
 ---
