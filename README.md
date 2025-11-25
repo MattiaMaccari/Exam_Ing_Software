@@ -14,6 +14,7 @@ Il problema del commesso viaggiatore (TSP – Traveling Salesman Problem) è un 
 
 ![TSP](./Images/tsp.png)
 
+<br>
 Nel problema del commesso viaggiatore con tempi di apertura, ogni nodo 𝑖 i può essere visitato solo a partire da un determinato istante di apertura 𝑡_𝑖.
 
 Questo vincolo temporale aggiuntivo complica ulteriormente il problema:
