@@ -12,7 +12,7 @@
 
 Il problema del commesso viaggiatore (TSP – Traveling Salesman Problem) è un problema combinatorio classico noto per essere NP-hard, ovvero non esiste alcun algoritmo noto in grado di risolverlo in tempo polinomiale in tutti i casi. L’obiettivo del TSP consiste nel trovare il ciclo hamiltoniano di costo minimo che visiti ciascun nodo esattamente una volta.
 
-![TSP](./images/tsp.png)
+![TSP](./Images/tsp.png)
 
 Nel problema del commesso viaggiatore con tempi di apertura, ogni nodo 𝑖 i può essere visitato solo a partire da un determinato istante di apertura 𝑡_𝑖.
 
@@ -78,3 +78,4 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 - **Iterated Local Search**  
   Una procedura iterativa che applica ripetutamente local search con perturbazioni per uscire da minimi locali.
+
