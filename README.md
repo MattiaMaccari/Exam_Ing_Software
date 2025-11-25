@@ -1,4 +1,4 @@
-# Progetto TSP - Algoritmi Greedy, Local Search e Tabu Search
+# Progetto TSP
 
 ## TSP con finestre temporali (TS-TW):
 * A partire dalla base (nodo 0) un tecnico deve rifornire n vending machines poste in n siti diversi, e rientrare alla base.
@@ -58,19 +58,41 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 
 
-## Spiegazione dei vari moduli
+## Spiegazione dei vari moduli/algoritmi
 
-- **Generazione istanze TSP**  
-  Funzioni per creare nodi con coordinate casuali, tempi di apertura e matrice delle distanze.
+- **Generazione istanze TSP**  <br>
 
-- **Visualizzazione**  
+  La funzione generate_tsp_instance, genera un’istanza e ha i seguenti parametri:
+  * n : numero di nodi
+  * max_coordinate : Valore coordinate massimo
+  * max_opening_time : valore massimo apertura nodo
+  * seed_coordinates : seme per generazione casuale e ripetibile delle coordinate
+  * seed_opening_times : seme per generazione casuale e ripetibile dei tempi di apertura dei nodi
+---
+- **Visualizzazione**  <br>
+
   Funzioni per stampare le istanze e rappresentarle graficamente:
   - `plot_tsp_nodes`: visualizza solo i nodi
   - `plot_tsp_nodes_link`: visualizza nodi e collegamenti con frecce
+---
+- **Algoritmi Greedy**<br>
 
-- **Algoritmi Greedy**  
-  Implementazioni delle tre procedure greedy per costruire soluzioni iniziali.
+  1. **greedy_minumum_opening_time**costruisce una soluzione eseguendo le seguenti operazioni:
+      * Ordina i nodi dell'istanza, in ordine non decrescente, in base all'opening_time di ciascun nodo.
+      * Seleziona un nodo alla volta dal vettore dei nodi ordinati e lo collega con il successivo.
 
+  2. **greedy_minimum_distance_from_zero**
+  costruisce una soluzione eseguendo le seguenti operazioni:
+      * Ordina i nodi dell'istanza in base alla distanza crescent dalla base (nodo 0).
+      * Seleziona un nodo alla volta dal vettore dei nodi ordinati e lo collega con il successivo.
+  
+  3. **greedy Nearest Node** costruisce una soluzione eseguendo le seguenti operazioni:
+      * Seleziona, per ciascun nodo, il nodo adiacente più vicino.
+      * Ad ogni passo, vengono identificati i nodi adiacenti e si sceglie quello con il costo minimo, aggiornando progressivamente la soluzione con decisioni localmente ottimali.
+  
+  
+  
+---
 - **Local Search**  
   Implementazioni delle due varianti di ricerca locale per migliorare le soluzioni greedy.
 
