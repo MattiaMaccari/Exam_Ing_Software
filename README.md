@@ -79,7 +79,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 ---
 - **Algoritmi Greedy**<br>
 
-  1. **greedy_minumum_opening_time**costruisce una soluzione eseguendo le seguenti operazioni:
+  1. **greedy_minumum_opening_time** costruisce una soluzione eseguendo le seguenti operazioni:
       * Ordina i nodi dell'istanza, in ordine non decrescente, in base all'opening_time di ciascun nodo.
       * Seleziona un nodo alla volta dal vettore dei nodi ordinati e lo collega con il successivo.
 
@@ -98,7 +98,7 @@ Nel progetto vengono illustrate le seguenti procedure:
   1. **Swap Adjacent**  
   * Strategia: **First Improvement**, cerca di migliorare iterativamente una route scambiando due nodi adiacenti, privilegiando quelli con maggiore idle o tardiness <br>
 
-    <img src="./Images/LS1.png" alt="TSP" width="350">
+    <img src="./Images/LS1.png" alt="TSP" width="400">
 
   <br>
 
@@ -109,7 +109,7 @@ Nel progetto vengono illustrate le seguenti procedure:
   * I nodi vengono cancellati a partire dalla fine della route.
   * Il nodo i viene reinserito nella posizione p solo se la sua distanza dal nodo precedente (p-1) o dal nodo iniziale è inferiore a quella del nodo attualmente presente in p.
   
-    <img src="./Images/LS2.png" alt="TSP" width="350">
+    <img src="./Images/LS2.png" alt="TSP" width="400">
 
   <br>
 
@@ -120,14 +120,46 @@ Nel progetto vengono illustrate le seguenti procedure:
   * I nodi vengono cancellati a partire dalla fine della route.
   * Il nodo i viene reinserito nella posizione p solo se la sua distanza dal nodo precedente (p-1) o dal nodo iniziale è inferiore a quella del nodo attualmente presente in p.
 
-    <img src="./Images/LS3.png" alt="TSP" width="350">
+    <img src="./Images/LS3.png" alt="TSP" width="400">
   
   <BR>
 
 ---
-- **Tabu Search**  
-  Implementazioni delle due varianti di tabu search per esplorare lo spazio delle soluzioni evitando cicli.
+- **Tabu Search**
+  1. **Information Guided**  
+  * La funzione information_guided_tabu_searchA implementa una variante della Tabu Search per ottimizzare un percorso, spostando iterativamente i nodi in base a una priorità calcolata su idle_tardiness.
+  * Tiene traccia delle soluzioni migliori evitando cicli grazie a una lista Tabu, ma consente eccezioni se si trova un miglioramento (criterio di aspirazione). 
+  * Il processo termina dopo un numero definito di iterazioni senza miglioramenti. 
+  * Restituisce il miglior percorso trovato e informazioni sull’evoluzione della ricerca.
+  
+  <br>
 
+  2. **City Insert**
+  * La funzione tabu_search_city_insertA applica la Tabu Search rimuovendo e reinserendo nodi del percorso per esplorare soluzioni vicine.
+  * Se una mossa è Tabu, può comunque essere accettata se migliora la soluzione ottima (criterio di aspirazione).
+  * Il processo continua finché non si verificano troppi passi senza miglioramenti.
+  * Restituisce il miglior percorso trovato e informazioni sull’evoluzione della ricerca.
+  
+<br>
+
+---
 - **Iterated Local Search**  
-  Una procedura iterativa che applica ripetutamente local search con perturbazioni per uscire da minimi locali.
 
+  Questa funzione implementa un algoritmo iterativo di ricerca locale guidata per ottimizzare una soluzione su una data istanza di problema.
+  * Inizia generando una soluzione greedy e migliorandola tramite una procedura di LS (LS_swap_adjacent). 
+  * Successivamente entra in un ciclo iterativo in cui perturba la soluzione corrente con una mossa di diversificazione e la migliora ulteriormente con la ricerca locale.  
+  * La funzione tiene traccia dell’evoluzione della funzione obiettivo ad ogni iterazione e restituisce la migliore soluzione e il suo valore.
+  
+  ---
+  - MOSSA DI DIVERSIFICAZIONE: 
+
+    <img src="./Images/MOVE1.png" alt="TSP" width="400">
+  ---
+  - VISUALIZZAZIONE GRAFICA
+
+    <img src="./Images/MOVE2.png" alt="TSP" width="400">
+  
+    <img src="./Images/MOVE3.png" alt="TSP" width="400">
+<br>
+    
+---
