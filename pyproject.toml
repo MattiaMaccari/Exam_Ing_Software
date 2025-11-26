@@ -20,3 +20,6 @@ keywords = ["exam"]
 
 [project.scripts]
 exam = "exam:main"
+
+[tool.setuptools]
+packages = ["exam"]
