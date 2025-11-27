@@ -73,7 +73,7 @@ def main():
     #print("Istanza 1:")
     #print_istance(instance_1)
     #print("\nIstanza 2:")
-    print_istance(instance_2)
+    #print_istance(instance_2)
 
     #print("\n")
     #plot_tsp_nodes(instance_1)
