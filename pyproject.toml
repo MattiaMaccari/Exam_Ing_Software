@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "exam"
 version = "0.0.1"
-dependencies = []
+dependencies = ["numpy", "matplotlib", "seaborn"]
 requires-python = ">=3.8"
 authors = [
   {name = "Matti Maccari", email = "mattia.maccari@edu.unife.it"}
@@ -17,6 +17,9 @@ description = "R.O. Exam Project"
 readme = "README.md"
 license = {file = "LICENSE"}
 keywords = ["exam"]
+
+[project.optional-dependencies]
+dev = ["pytest", "coverage"]
 
 [project.scripts]
 exam = "exam:main"
