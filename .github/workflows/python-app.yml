@@ -27,7 +27,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install --upgrade build
-        python -m pip install pylint pytest hypotesis
+        python -m pip install pylint pytest
         pip install .
     - name: Lint with pylint
       run: |
