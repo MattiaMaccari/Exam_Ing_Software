@@ -278,7 +278,62 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 ## SEZIONE DI TEST - INTEGRATION E UNIT TEST
 
-  - **INTEGRATION TEST**
+**INTEGRATION TEST - second_integration_test.py**
 
-    - 
+Questo test verifica l’intero pipeline di risoluzione di un problema TSP (Traveling Salesman Problem), controllando che i diversi algoritmi implementati funzionino correttamente e si integrino tra loro.
+In particolare:
+- **Generazione dell’istanza**
+  - Crea un problema TSP con 20 città, coordinate casuali e tempi di apertura.
+  - Controlla che l’istanza sia valida (numero di città, ID iniziale).
+
+- **Algoritmi Greedy**
+  - Applica tre strategie greedy.
+  - Calcola l’obiettivo (costo del percorso) e verifica che i risultati siano consistenti e calcolati entro un tempo limite.
+
+- **Local Search**
+  - Parte da una soluzione greedy e applica varianti di ricerca locale (swap, insert, insertT).
+  - Controlla che la soluzione rimanga valida, che il costo sia non negativo e che le mosse siano registrate correttamente.
+
+- **Tabu Search**
+  - Esegue due versioni di tabu search (city_insert, information_guided).
+  - Verifica che vengano restituiti percorso, valore, soluzioni correnti e migliori, insieme alla lista tabu.
+
+- **Iterated Local Search (ILS)**
+  - Applica una ricerca locale iterata con massimo 60 iterazioni.
+  - Controlla che la soluzione finale sia valida e che il costo sia corretto.
+
+Il test dimostra che tutti i moduli dell’algoritmo TSP (generazione istanza, greedy, local search, tabu search, ILS) funzionano correttamente quando integrati in un’unica pipeline, garantendo coerenza dei dati, tempi di esecuzione accettabili e risultati validi.
+
+---
+<br>
+
+**UNIT TEST - second_unit_test.py** 
+
+Questo insieme di test automatizzati serve a verificare, in modo modulare, il corretto funzionamento dei vari algoritmi e componenti sviluppati per il problema del commesso viaggiatore (TSP).
+Struttura dei test
+- **TestGenerateInstance**
+  - Controlla che la funzione di generazione dell’istanza (generate_tsp_instance) produca una lista di nodi con la struttura corretta: ogni nodo deve avere id, coordinates, opening_time e distance_vector della giusta lunghezza.
+
+- **TestObjective**
+  - Verifica che la funzione di calcolo dell’obiettivo (calculate_objective) restituisca un valore numerico (intero o float) e non negativo, garantendo la validità della valutazione di un percorso.
+
+- **TestGreedy**
+  - Controlla che i tre algoritmi greedy (greedy_minimum_opening_time, greedy_minimum_distance_from_zero, nn_greedy) producano percorsi completi della giusta lunghezza (pari al numero di città).
+
+- **TestLocalSearch**
+  - Verifica le varianti di ricerca locale:
+  - Swap Adjacent: scambia città adiacenti nel percorso.
+  - City Insert: inserisce città in posizioni diverse.
+  - City Insert Tail (nuovo test): variante che lavora sulla parte finale del percorso.
+  - In tutti i casi si controlla che il percorso rimanga valido e che il valore dell’obiettivo sia numerico.
+
+- **TestTabuSearch**
+  - Valida l’algoritmo di Tabu Search e la sua variante information-guided.
+  - Si assicura che vengano restituiti percorsi della giusta lunghezza e valori obiettivo coerenti.
+
+- **TestILS**
+  - Verifica l’algoritmo di Iterated Local Search (ILS),    controllando che produca un percorso valido con il numero corretto di città.
+
+
+    
 

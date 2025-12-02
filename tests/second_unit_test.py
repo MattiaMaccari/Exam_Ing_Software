@@ -65,7 +65,6 @@ class TestLocalSearch(unittest.TestCase):
         self.assertEqual(len(new_route), 20)
 
     def test_ls_insert_tail(self):
-        # NUOVO TEST: verifica della variante "tail" della local search
         instance = generate_tsp_instance(n=20, max_coordinate=200, seed_coordinates=3, seed_opening_times=4)
         route = nn_greedy(instance)
         obj_val = calculate_objective(route, instance)
@@ -82,7 +81,6 @@ class TestTabuSearch(unittest.TestCase):
         self.assertEqual(len(best_route), 10)
 
     def test_information_guided_tabu(self):
-        # NUOVO TEST: verifica della variante information-guided della Tabu Search
         instance = generate_tsp_instance(10, 200, 3, 4)
         route = nn_greedy(instance)
         obj_val = calculate_objective(route, instance)
