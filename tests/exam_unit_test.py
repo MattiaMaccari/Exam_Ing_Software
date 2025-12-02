@@ -108,7 +108,6 @@ def test_plot_tsp_nodes():
 
 # TESTO LA FUNZIONE CHE CALCOLA IL VALORE DELLA FUNZIONE OBBIETTIVO
 
-# tests/test_calculate_objective.py
 from exam.exam import calculate_objective
 
 def build_node(id, opening_time, coordinates, distance_vector):
@@ -208,7 +207,7 @@ def test_greedy_minimum_opening_time():
 from exam.exam import greedy_minimum_distance_from_zero
 
 def test_greedy_minimum_distance_from_zero():
-    # Creo 3 nodi con distanze diverse rispetto al nodo 0
+    # Creo 3 nodi
     node0 = {
         'id': 0,
         'opening_time': 0,
@@ -228,10 +227,10 @@ def test_greedy_minimum_distance_from_zero():
         'distance_vector': np.array([10, 3, 0])
     }
 
-    nodes = [node2, node0, node1]  # ordine mescolato
+    nodes = [node2, node0, node1]  # ordine casuale
     route = greedy_minimum_distance_from_zero(nodes)
 
-    # Verifico che l'ordine sia corretto (per distanza da nodo 0)
+    # Verifico che l'ordine sia corretto (per distanza da nodo base)
     assert [n['id'] for n in route] == [0, 1, 2]
 
     # Verifico che idle e tardiness siano presenti
@@ -245,7 +244,7 @@ def test_greedy_minimum_distance_from_zero():
 from exam.exam import nn_greedy
 
 def test_nn_greedy_order_and_idle_tardiness():
-    # Definizione dei nodi
+    # Creazione dei nodi
     node0 = {
         'id': 0,
         'opening_time': 0,
@@ -265,7 +264,7 @@ def test_nn_greedy_order_and_idle_tardiness():
         'distance_vector': np.array([10, 3, 0])
     }
 
-    nodes = [node2, node0, node1]  # ordine mescolato
+    nodes = [node2, node0, node1]  # ordine casuale
     route = nn_greedy(nodes)
 
     # Verifica ordine atteso: parte da 0, poi va al più vicino (1), poi 2
@@ -300,7 +299,7 @@ def test_LS_swap_adjacent_improves_solution():
     d4 = np.array([9, 6, 4, 2, 0])
 
     istance = [
-        build_node(0, 0, (0, 0), d0),   # base
+        build_node(0, 0, (0, 0), d0),
         build_node(1, 5, (1, 1), d1),
         build_node(2, 10, (2, 2), d2),
         build_node(3, 15, (3, 3), d3),
@@ -351,7 +350,7 @@ def test_LSH_city_insert_improves_solution():
     d4 = np.array([9, 6, 4, 2, 0])
 
     istance = [
-        build_node(0, 0, (0, 0), d0),   # base
+        build_node(0, 0, (0, 0), d0),  
         build_node(1, 5, (1, 1), d1),
         build_node(2, 10, (2, 2), d2),
         build_node(3, 15, (3, 3), d3),
@@ -404,7 +403,7 @@ def test_LSH_city_insertT_improves_solution():
     d4 = np.array([9, 6, 4, 2, 0])
 
     istance = [
-        build_node(0, 0, (0, 0), d0),   # base
+        build_node(0, 0, (0, 0), d0),  
         build_node(1, 5, (1, 1), d1),
         build_node(2, 10, (2, 2), d2),
         build_node(3, 15, (3, 3), d3),
@@ -457,7 +456,7 @@ def test_tabu_search_city_insertAR_improves_solution():
     #d4 = np.array([9, 6, 4, 2, 0])
 
     #istance = [
-    #    build_node(0, 0, (0, 0), d0),   # base
+    #    build_node(0, 0, (0, 0), d0),   
     #    build_node(1, 5, (1, 1), d1),
     #    build_node(2, 10, (2, 2), d2),
     #    build_node(3, 15, (3, 3), d3),
@@ -517,7 +516,7 @@ def test_information_guided_tabu_searchAR_improves_solution():
     #d4 = np.array([9, 6, 4, 2, 0])
 
     #istance = [
-    #    build_node(0, 0, (0, 0), d0),   # base
+    #    build_node(0, 0, (0, 0), d0),
     #    build_node(1, 5, (1, 1), d1),
     #    build_node(2, 10, (2, 2), d2),
     #    build_node(3, 15, (3, 3), d3),
@@ -578,14 +577,14 @@ def test_IT_LS_INFORMATION_GUIDED_improves_solution():
     d4 = np.array([9, 6, 4, 2, 0])
 
     istance = [
-        build_node(0, 0, (0, 0), d0),   # base
+        build_node(0, 0, (0, 0), d0),
         build_node(1, 5, (1, 1), d1),
         build_node(2, 10, (2, 2), d2),
         build_node(3, 15, (3, 3), d3),
         build_node(4, 20, (4, 4), d4)
     ]
 
-    # Applico la procedura iterativa con LS guidata
+    # Applico la procedura iterativa con LS guidata dall'informazione
     max_iterations = 10
     best_route, best_obj_val, info = IT_LS_INFORMATION_GUIDED(istance, max_iterations)
 
@@ -654,14 +653,13 @@ def test_compare_greedy_returns_three_values():
     seed_coordinates = 42
     seed_opening_times = 99
 
-    # Disattiva la stampa grafica
     val_Gmot, val_Gmdfz, val_Gnn = compare_greedy(
         n=n,
         max_coordinate=max_coordinate,
         max_opening_time=max_opening_time,
         seed_coordinates=seed_coordinates,
         seed_opening_times=seed_opening_times,
-        plot=None
+        plot=None # Disattiva la stampa
     )
 
     # Verifiche
@@ -686,7 +684,7 @@ def test_compare_greedy_plot_block():
 from exam.exam import call_LocalSearch
 
 def test_call_LocalSearch_returns_expected_output():
-    # Parametri controllati per istanza riproducibile
+    # Parametri per istanza riproducibile
     n = 5
     max_coordinate = 50
     max_opening_time = 20
@@ -734,7 +732,7 @@ from exam.exam import call_tabu_searchA
 import numbers
 
 def test_call_tabu_searchA_returns_valid_solution():
-    # Parametri controllati per istanza riproducibile
+    # Parametri per istanza riproducibile
     n = 5
     max_coordinate = 50
     max_opening_time = 20
@@ -783,7 +781,7 @@ import warnings
 def test_print_iterated_local_search_executes_plot_block():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=UserWarning)
-        # Patchiamo sia plt.show che sns.lineplot per verificare che vengano chiamati
+        # Patcho sia plt.show che sns.lineplot per verificare che vengano chiamati
         with patch("exam.exam.plt.show") as mock_show, \
             patch("exam.exam.sns.lineplot") as mock_lineplot, \
             patch("exam.exam.plt.scatter") as mock_scatter:

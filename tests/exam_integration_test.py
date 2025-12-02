@@ -30,14 +30,14 @@ def test_main_and_functions(capsys, monkeypatch):
     captured = capsys.readouterr()
     assert "Istanza" in captured.out or "Valore" in captured.out or captured.out == ""
 
-    # 2. Genera un'istanza come fa il main
+    # 2. Genera un'istanza
     instance = generate_tsp_instance(n=20, max_coordinate=100, seed_coordinates=1, seed_opening_times=2)
 
-    # 2bis. Controlla funzioni di plotting e orchestrazione
+    # 2b. Controlla funzioni di plotting
     route = greedy_minimum_opening_time(instance)
-    # plot_tsp_node_link deve accettare una route
+    # plot_tsp_node_link
     assert plot_tsp_nodes_link(route) is None
-    # plot_tsp_nodes deve accettare un'istanza
+    # plot_tsp_nodes
     assert plot_tsp_nodes(instance) is None
     # call_greedy deve restituire qualcosa (o None se plot attivo)
     assert call_greedy(10, 100, 50, 11, 2, "greedy_minimum_opening_time") is None or True

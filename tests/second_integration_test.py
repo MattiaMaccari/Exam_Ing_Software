@@ -97,7 +97,6 @@ def test_full_integration_pipeline():
         assert isinstance(curr, list)
         assert isinstance(best, list)
         assert isinstance(tabu, list)
-        # assert time.time() - start < 20   # timeout accettabile
 
 
     # -------------------------------------------------------
@@ -110,13 +109,4 @@ def test_full_integration_pipeline():
     assert len(route) == 20
     assert val >= 0
     assert isinstance(extra, list)
-    # assert time.time() - start < 20
-
-    # -------------------------------------------------------
-    # 6) Check finale risultati
-    # -------------------------------------------------------
-    #print("\n=== RISULTATI INTEGRATION TEST ===")
-    #for k, v in results.items():
-    #    print(f"{k:20s} → FO = {v}")
-
-    #assert True  # se arrivi qui, tutto ok
+    
