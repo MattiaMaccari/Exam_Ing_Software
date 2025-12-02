@@ -99,7 +99,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  2. **City Insert**
+  1. **City Insert**
   * Strategia: **h Improvement** (la migliore delle h soluzioni che migliorano l'ottimo corrente).
   * La ricerca nell'intorno procede fino a determinare h miglioramenti.
   * Intorno ottenuto dalla cancellazione di 1 nodo nella route e dal suo reinserimento in un altro punto (partendo dall’inizio).
@@ -110,7 +110,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  3. **City Insert Tail**
+  1. **City Insert Tail**
   * Strategia: **h Improvement** (la migliore delle h soluzioni che migliorano l'ottimo corrente).
   * La ricerca nell'intorno procede fino a determinare h miglioramenti.
   * Intorno ottenuto dalla cancellazione di 1 nodo nella route e dal suo reinserimento in un altro punto (partendo dalla fine).
