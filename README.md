@@ -76,6 +76,28 @@ Nel progetto vengono illustrate le seguenti procedure:
 ---
 - **Algoritmi Greedy**<br>
 
+  **DEFINIZIONE:**
+
+  Gli algoritmi greedy (voraci) determinano la soluzione 
+  attraverso una sequenza di decisioni parziali (localmente 
+  ottime), senza mai modificare le decisioni gia prese.
+
+  Sono di facile implementazione e notevole efficienza 
+  computazionale ma, sia pure con alcune eccezioni di 
+  notevole rilievo, non garantiscono l'ottimalità, e a volte 
+  neppure l’ammissibilità della soluzione prodotta.
+
+  **Procedure Greedy  (template):**
+  * Soluzione iniziale S0=∅, 
+  * Ad ogni step k - seleziona ek come l’elemento di E più promettente (criterio best) tra quelli non ancora esaminati, - valuta se la soluzione parziale Sk ∪ ek ∈ F (test di indipendenza o di ammissibilità delle soluzioni parziali) 
+  * In caso positivo, estendi Sk con Sk ∪ ek (Sk+1:=Sk∪ek) altrimenti Sk+1:=Sk
+  * Se si è esaminato tutto E o se Sk è massimale, termina restituendo Sn = Sk
+  * Altrimenti Itera 
+
+  <br>
+
+  **ALGORITMI GREEDY IMPLEMENTATI:**
+
   1. **greedy_minumum_opening_time** costruisce una soluzione eseguendo le seguenti operazioni:
       * Ordina i nodi dell'istanza, in ordine non decrescente, in base all'opening_time di ciascun nodo.
       * Seleziona un nodo alla volta dal vettore dei nodi ordinati e lo collega con il successivo.
@@ -92,6 +114,32 @@ Nel progetto vengono illustrate le seguenti procedure:
   <br>
 ---
 - **Local Search**
+
+  **DEFINIZIONE:**
+
+  Sono euristiche di **miglioramento**: 
+  Occorre fornire loro una soluzione di partenza, prodotta utilizzando una delle euristiche costruttive viste in precedenza.
+  Si dividono in euristiche single thread e multi thread (population based).
+
+  La **local search** è la capostipite delle euristiche single thread ed è basata sul concetto di **intorno**.
+
+  L’intorno è descritto attraverso la **mossa** che specifica operativamente cosa modificare della soluzione corrente e come farlo, per generare tutte le soluzioni del vicinato. 
+
+  Restituisce un punto di **ottimo locale**, il primo individuato lungo la ricerca.
+
+  Per superare questo limite, sono state proposte numerose strategie sempre basate sul concetto di intorno (Ricerca Tabù, Simulated Annealing, Iterated Local Search,Variable Neighboorhood Search, Grasp, etc.) che possono essere ibridizzate fra loro per dare luogo a nuovi algoritmi.
+
+  **Procedura local search:**
+
+  * Ad ogni iterazione k-esima si tratta di risolvere un problema di ottimizzazione ristretto all’intorno **N(xk)** della soluzione corrente **xk**. 
+  * La procedura **Local Search** restituisce una qualsiasi soluzione **x*** migliore di **xk** nell’insieme **N(xk)** se questa esiste, ma non necessariamente la migliore soluzione in **N(xk)**.
+
+    Quindi il problema di ottimizzazione che si risolve ad ogni iterazione k-esima, non viene necessariamente risolto in modo esatto anche se ciò è possibile.
+
+  <br>
+
+  **ALGORITMI DI TIPO LOCAL SEARCH IMPLEMENTATI:**
+
   1. **Swap Adjacent**  
   * Strategia: **First Improvement**, cerca di migliorare iterativamente una route scambiando due nodi adiacenti, privilegiando quelli con maggiore idle o tardiness <br>
 
@@ -123,6 +171,26 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 ---
 - **Tabu Search**
+
+  **DEFINIZIONE:**
+
+  Ad ogni iterazione si seleziona la miglior soluzione dell’intorno diversa dalla peggiore se quella corrente è un ottimo locale.
+  
+  * La sequenza del valore delle soluzioni visitate non è più monotona, quindi occorre mantenere memoria della miglior soluzione visitata (ottimo candidato).
+  * Ad ogni iterazione si memorizza in una lista tabu l’inversa della mossa appena effettuata, che resterà proibita per le prossime N (lunghezza lista tabù) iterazioni. 
+  * Lo scopo è garantire che la mossa inversa della mossa m appena effettuata venga applicata solo su una soluzione ormai sostanzialmente diversa da quella originata dalla mossa m, in modo tale da non ricondurre la ricerca su soluzioni gia visitate.
+  * Eccezioni: il criterio di aspirazione permette di visitare soluzioni tabù con valore di 
+  funzione obiettivo migliore di quella dell’ottimo candidato (sono sicuramente 
+  soluzioni mai visitate).
+  * Criteri di STOP (come alternativa al raggiungimento dell’ottimo locale): 
+  Stallo(=Massimo numero di passi senza miglioramenti), Massimo numero di iterazioni, Massimo numero di valutazioni della funzione obiettivo quando è costosa, 
+  Massimo running time.
+
+  <br>
+
+
+  **ALGORITMI DI TIPO TABU SEARCH IMPLEMENTATI:**
+
   1. **Information Guided**  
   * La funzione information_guided_tabu_searchA implementa una variante della Tabu Search per ottimizzare un percorso, spostando iterativamente i nodi in base a una priorità calcolata su idle_tardiness.
   * Tiene traccia delle soluzioni migliori evitando cicli grazie a una lista Tabu, ma consente eccezioni se si trova un miglioramento (criterio di aspirazione). 
@@ -141,6 +209,28 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 ---
 - **Iterated Local Search**  
+
+  **DEFINIZIONE:**
+
+  Studi sperimentali hanno comprovato che per iI problemi di ottimizzazione combinatoria esistono numerosi ottimi locali di bassa qualità.
+
+  Quindi è ragionevole cercare una strategia per continuare la ricerca anche dopo avere 
+  determinate un ottimo locale.
+  Ad esempio, iterando il procedimento a partire da un altro punto iniziale.
+
+  Per fare questo, è stato ideato l'algoritmo chiamato **Iterated local search** che ha il seguente funzionamento:
+
+  L’idea, è perturbare sufficientemente l’ottimo locale **x*** corrente ottenuto da una procedura LocalSearch, e riapplicare la stessa LocalSearch alla soluzione perturbata.
+
+  Un check verifica la diversità del nuovo ottimo locale, dal precedente. 
+  Data l’eventuale tolleranza al peggioramento della funzione obiettivo, si decide se accettare la nuova soluzione e iterare a partire da essa, oppure ripetere il procedimento a partire dal precedente ottimo 
+  locale, riapplicando la perturbazione per generare il punto iniziale di una nuova LS.
+
+  <br>
+
+  **ALGORITMO DI TIPO ITERATED LOCAL SEARCH IMPLEMENTATO:**
+
+  **it_ls_information_guided:**
 
   Questa funzione implementa un algoritmo iterativo di ricerca locale guidata per ottimizzare una soluzione su una data istanza di problema.
   * Inizia generando una soluzione greedy e migliorandola tramite una procedura di LS (LS_swap_adjacent). 
@@ -167,7 +257,9 @@ Nel progetto vengono illustrate le seguenti procedure:
     * A questo punto viene estratto un numero casuale compreso tra zero e uno.
     * Se il numero appena estratto è più piccolo di 0.5 allora gli elementi della lista in posizione **i** e in posizione **j** vengono scambiati.
     * Se il numero estratto è maggiore o uguale di 0.5 allora la sotto sequenza che va da **i** a **j** viene invertita.
-  ---
+  
+  <br>
+
   **VISUALIZZAZIONE GRAFICA DELLA MOSSA**
      
     Scambio degli elementi in posizione **i** e posizione **j**:
