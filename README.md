@@ -260,7 +260,7 @@ Nel progetto vengono illustrate le seguenti procedure:
   
   <br>
 
-  <u>**VISUALIZZAZIONE GRAFICA DELLA MOSSA**</u>
+  <u>**VISUALIZZAZIONE GRAFICA DELLA MOSSA:**</u>
     <br>
 
     Scambio degli elementi in posizione **i** e posizione **j**:
@@ -272,9 +272,9 @@ Nel progetto vengono illustrate le seguenti procedure:
     Inversione della sotto sequenza identificata dagli indici **i** e **j**:
 
     <img src="./Images/MOVE3.png" alt="TSP" width="400">
-<br>
 
 ---
+<br>
 
 ## SEZIONE DI TEST - INTEGRATION E UNIT TEST
 
