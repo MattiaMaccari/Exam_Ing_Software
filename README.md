@@ -76,7 +76,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 ---
 - **Algoritmi Greedy**<br>
 
-  **DEFINIZIONE:**
+  <u>**DEFINIZIONE:**</u>
 
   Gli algoritmi greedy (voraci) determinano la soluzione 
   attraverso una sequenza di decisioni parziali (localmente 
@@ -87,7 +87,7 @@ Nel progetto vengono illustrate le seguenti procedure:
   notevole rilievo, non garantiscono l'ottimalità, e a volte 
   neppure l’ammissibilità della soluzione prodotta.
 
-  **Procedure Greedy  (template):**
+  <u>**PROCEDURA GREEDY (TEMPLATE):**</u>
   * Soluzione iniziale S0=∅, 
   * Ad ogni step k - seleziona ek come l’elemento di E più promettente (criterio best) tra quelli non ancora esaminati, - valuta se la soluzione parziale Sk ∪ ek ∈ F (test di indipendenza o di ammissibilità delle soluzioni parziali) 
   * In caso positivo, estendi Sk con Sk ∪ ek (Sk+1:=Sk∪ek) altrimenti Sk+1:=Sk
@@ -96,7 +96,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  **ALGORITMI GREEDY IMPLEMENTATI:**
+  <u>**ALGORITMI GREEDY IMPLEMENTATI:**</u>
 
   1. **greedy_minumum_opening_time** costruisce una soluzione eseguendo le seguenti operazioni:
       * Ordina i nodi dell'istanza, in ordine non decrescente, in base all'opening_time di ciascun nodo.
@@ -115,7 +115,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 ---
 - **Local Search**
 
-  **DEFINIZIONE:**
+  <u>**DEFINIZIONE:**</u>
 
   Sono euristiche di **miglioramento**: 
   Occorre fornire loro una soluzione di partenza, prodotta utilizzando una delle euristiche costruttive viste in precedenza.
@@ -129,7 +129,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   Per superare questo limite, sono state proposte numerose strategie sempre basate sul concetto di intorno (Ricerca Tabù, Simulated Annealing, Iterated Local Search,Variable Neighboorhood Search, Grasp, etc.) che possono essere ibridizzate fra loro per dare luogo a nuovi algoritmi.
 
-  **Procedura local search:**
+  <u>**PROCEDURA LOCAL SEARCH:**</u>
 
   * Ad ogni iterazione k-esima si tratta di risolvere un problema di ottimizzazione ristretto all’intorno **N(xk)** della soluzione corrente **xk**. 
   * La procedura **Local Search** restituisce una qualsiasi soluzione **x*** migliore di **xk** nell’insieme **N(xk)** se questa esiste, ma non necessariamente la migliore soluzione in **N(xk)**.
@@ -138,7 +138,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  **ALGORITMI DI TIPO LOCAL SEARCH IMPLEMENTATI:**
+  <u>**ALGORITMI DI TIPO LOCAL SEARCH IMPLEMENTATI:**</u>
 
   1. **Swap Adjacent**  
   * Strategia: **First Improvement**, cerca di migliorare iterativamente una route scambiando due nodi adiacenti, privilegiando quelli con maggiore idle o tardiness <br>
@@ -172,7 +172,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 ---
 - **Tabu Search**
 
-  **DEFINIZIONE:**
+  <u>**DEFINIZIONE:**</u>
 
   Ad ogni iterazione si seleziona la miglior soluzione dell’intorno diversa dalla peggiore se quella corrente è un ottimo locale.
   
@@ -189,7 +189,7 @@ Nel progetto vengono illustrate le seguenti procedure:
   <br>
 
 
-  **ALGORITMI DI TIPO TABU SEARCH IMPLEMENTATI:**
+  <u>**ALGORITMI DI TIPO TABU SEARCH IMPLEMENTATI:**</u>
 
   1. **Information Guided**  
   * La funzione information_guided_tabu_searchA implementa una variante della Tabu Search per ottimizzare un percorso, spostando iterativamente i nodi in base a una priorità calcolata su idle_tardiness.
@@ -210,7 +210,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 ---
 - **Iterated Local Search**  
 
-  **DEFINIZIONE:**
+  <u>**DEFINIZIONE:**</u>
 
   Studi sperimentali hanno comprovato che per iI problemi di ottimizzazione combinatoria esistono numerosi ottimi locali di bassa qualità.
 
@@ -228,7 +228,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  **ALGORITMO DI TIPO ITERATED LOCAL SEARCH IMPLEMENTATO:**
+  <u>**ALGORITMO DI TIPO ITERATED LOCAL SEARCH IMPLEMENTATO:**</u>
 
   **it_ls_information_guided:**
 
@@ -239,7 +239,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  **MOSSA DI DIVERSIFICAZIONE:**
+  <u>**MOSSA DI DIVERSIFICAZIONE:**</u>
 
     <img src="./Images/MOVE1.png" alt="TSP" width="400">
 
@@ -260,12 +260,17 @@ Nel progetto vengono illustrate le seguenti procedure:
   
   <br>
 
-  **VISUALIZZAZIONE GRAFICA DELLA MOSSA**
-     
+  <u>**VISUALIZZAZIONE GRAFICA DELLA MOSSA**</u>
+    <br>
+
     Scambio degli elementi in posizione **i** e posizione **j**:
+
     <img src="./Images/MOVE2.png" alt="TSP" width="400">
 
+    <br>
+
     Inversione della sotto sequenza identificata dagli indici **i** e **j**:
+
     <img src="./Images/MOVE3.png" alt="TSP" width="400">
 <br>
 
