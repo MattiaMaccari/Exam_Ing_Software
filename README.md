@@ -99,7 +99,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  1. **City Insert**
+  2. **City Insert**
   * Strategia: **h Improvement** (la migliore delle h soluzioni che migliorano l'ottimo corrente).
   * La ricerca nell'intorno procede fino a determinare h miglioramenti.
   * Intorno ottenuto dalla cancellazione di 1 nodo nella route e dal suo reinserimento in un altro punto (partendo dall’inizio).
@@ -110,7 +110,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <br>
 
-  1. **City Insert Tail**
+  3. **City Insert Tail**
   * Strategia: **h Improvement** (la migliore delle h soluzioni che migliorano l'ottimo corrente).
   * La ricerca nell'intorno procede fino a determinare h miglioramenti.
   * Intorno ottenuto dalla cancellazione di 1 nodo nella route e dal suo reinserimento in un altro punto (partendo dalla fine).
@@ -146,17 +146,42 @@ Nel progetto vengono illustrate le seguenti procedure:
   * Inizia generando una soluzione greedy e migliorandola tramite una procedura di LS (LS_swap_adjacent). 
   * Successivamente entra in un ciclo iterativo in cui perturba la soluzione corrente con una mossa di diversificazione e la migliora ulteriormente con la ricerca locale.  
   * La funzione tiene traccia dell’evoluzione della funzione obiettivo ad ogni iterazione e restituisce la migliore soluzione e il suo valore.
-  
-  ---
-  - MOSSA DI DIVERSIFICAZIONE: 
+
+  <br>
+
+  **MOSSA DI DIVERSIFICAZIONE:**
 
     <img src="./Images/MOVE1.png" alt="TSP" width="400">
-  ---
-  - VISUALIZZAZIONE GRAFICA
 
+    <br>
+
+    Come evidenziato nell'immagine la mossa di diversificazione della procedura **Iterated local search** si compone, di fatto, di altre due sotto mosse che vengono applicate con probabilità randomica.
+
+    In particolare la funzione **"modify_sequence"**, che si occupa di attuare la mossa, esegue i seguenti passi:
+
+    * Fa una copia della route in ingresso per poterci lavorare in sicurezza.
+    * Calcola un numero di iterazioni casuale da 1 a 3.
+    * Per il numero di iterazioni calcolato, calcola un indice **i** casuale che può andare da 1 alla lunghezza della lista meno i due elementi finali.
+    Calcola, poi, un indice **j** casuale che va da **i+1** alla lunghezza della lista escluso l'elemento finale.
+    * Una volta fatti questi calcoli l'indice **j** sarà sicuramente più grande di **i** ed il primo e l'ultimo elemento della lista rimarranno invariati.
+    * A questo punto viene estratto un numero casuale compreso tra zero e uno.
+    * Se il numero appena estratto è più piccolo di 0.5 allora gli elementi della lista in posizione **i** e in posizione **j** vengono scambiati.
+    * Se il numero estratto è maggiore o uguale di 0.5 allora la sotto sequenza che va da **i** a **j** viene invertita.
+  ---
+  **VISUALIZZAZIONE GRAFICA DELLA MOSSA**
+     
+    Scambio degli elementi in posizione **i** e posizione **j**:
     <img src="./Images/MOVE2.png" alt="TSP" width="400">
-  
+
+    Inversione della sotto sequenza identificata dagli indici **i** e **j**:
     <img src="./Images/MOVE3.png" alt="TSP" width="400">
 <br>
 
 ---
+
+## SEZIONE DI TEST - INTEGRATION E UNIT TEST
+
+  - **INTEGRATION TEST**
+
+    - 
+
