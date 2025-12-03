@@ -341,10 +341,28 @@ Struttura dei test
 
 ## OUTPUT GENERATORE DI ISTANZE:
 
+  - ISTANZA PICCOLA UTILIZZATA:
+
+    <img src="./Images/IST1.png" alt="TSP" width="600">
+
+    <br>
+
+  - ISTANZA MEDIA UTILIZZATA:
+
+    <img src="./Images/IST2.png" alt="TSP" width="600">
+
+    <br>
+
+  - ISTANZA GRANDE UTILIZZATA:
+
+    <img src="./Images/IST3.png" alt="TSP" width="600">
+
+    <br>
+
 
 ## OUTPUT ALGORITMI GREEDY:
 
-  - CONFRONTI
+  - CONFRONTI GREEDY SULLE DIVERSE ISTANZE:
 
     <img src="./Images/GCOMP_ISTPIC.png" alt="TSP" width="600">
 
@@ -414,9 +432,9 @@ Struttura dei test
     <br>
 
 
-## OUTPUT ITERATED LOCAL SEARCH
+## OUTPUT ITERATED LOCAL SEARCH:
 
-  - RISULTATO SULL'ISTANZA MEDIA
+  - RISULTATO SULL'ISTANZA MEDIA:
 
     <img src="./Images/ITLS1.png" alt="TSP" width="600">
 
