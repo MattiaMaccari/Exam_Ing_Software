@@ -274,7 +274,6 @@ Nel progetto vengono illustrate le seguenti procedure:
     <img src="./Images/MOVE3.png" alt="TSP" width="400">
 
 ---
-<br>
 
 ## SEZIONE DI TEST - INTEGRATION E UNIT TEST
 
@@ -333,6 +332,93 @@ Struttura dei test
 
 - **TestILS**
   - Verifica l’algoritmo di Iterated Local Search (ILS),    controllando che produca un percorso valido con il numero corretto di città.
+
+<br>
+
+---
+
+# OUTPUT OTTENUTI
+
+## OUTPUT GENERATORE DI ISTANZE:
+
+
+## OUTPUT ALGORITMI GREEDY:
+
+  - CONFRONTI
+
+    <img src="./Images/GCOMP_ISTPIC.png" alt="TSP" width="600">
+
+    <br>
+
+    <img src="./Images/GCOMP2.png" alt="TSP" width="600">
+
+    <br>
+
+    <img src="./Images/GCOMP3.png" alt="TSP" width="600">
+
+    <br>
+
+## OUTPUT LOCAL SEARCH:
+
+  - LOCAL SEARCH SWAP ADJACENT:
+
+    <img src="./Images/LS_PLOT1.png" alt="TSP" width="600">
+
+    <br>
+
+    <img src="./Images/LS_PLOT2.png" alt="TSP" width="600">
+
+    <br>
+
+  - LOCAL SEARCH CITY INSERT:
+
+    <img src="./Images/LS2_PLOT1.png" alt="TSP" width="600">
+
+    <br>
+
+    <img src="./Images/LS2_PLOT2.png" alt="TSP" width="600">
+
+    <br>
+
+  - LOCAL SEARCH CITY INSERT TAIL:
+
+    <img src="./Images/LS3_PLOT1.png" alt="TSP" width="600">
+
+    <br>
+
+    <img src="./Images/LS3_PLOT3.png" alt="TSP" width="600">
+
+    <br>
+
+
+## OUTPUT TABU SEARCH:
+
+  - TABU SEARCH INFORMATION GUIDED:
+
+    <img src="./Images/TSIG1.png" alt="TSP" width="600">
+
+    <br>
+
+    <img src="./Images/TSIG2.png" alt="TSP" width="600">
+
+    <br>
+
+  - TABU SEARCH CITY INSERT:
+
+    <img src="./Images/TSCI1.png" alt="TSP" width="600">
+
+    <br>
+
+    <img src="./Images/TSCI2.png" alt="TSP" width="600">
+
+    <br>
+
+
+## OUTPUT ITERATED LOCAL SEARCH
+
+  - RISULTATO SULL'ISTANZA MEDIA
+
+    <img src="./Images/ITLS1.png" alt="TSP" width="600">
 
 
     
