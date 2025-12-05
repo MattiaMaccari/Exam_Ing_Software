@@ -28,7 +28,7 @@ def test_main_and_functions(capsys, monkeypatch):
     monkeypatch.setattr(plt, "show", lambda:None)
     main()
     captured = capsys.readouterr()
-    assert "Istanza" in captured.out or "Valore" in captured.out or captured.out == ""
+    assert "ID" in captured.out or "Valore" in captured.out or captured.out == ""
 
     # 2. Genera un'istanza
     instance = generate_tsp_instance(n=20, max_coordinate=100, seed_coordinates=1, seed_opening_times=2)

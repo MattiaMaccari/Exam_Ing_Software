@@ -53,66 +53,34 @@ def main():
     instance_2 = generate_tsp_instance(n=20, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
     instance_3 = generate_tsp_instance(n=50, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
 
-    # CALCOLO DELLE SOLUZIONI DELLE GREEDY
-
-    # LE RIGHE SEGUENTI STAMPANO DIRETTAMENTE LE SOLUZIONI DELLE GREEDY E LA LORO COMPARAZIONE
-    # IN UN UNICO SUBPLOT SENZA DOVER INVOCARE ESPLICITAMENTE LA FUNZIONE plot_tsp_node_link
-    #call_greedy(20, 100, 80, 44, 2,'greedy_minimum_opening_time')
+    print_istance(instance_1)
+    # STAMPA DELLA COMPARAZIONE DELLE GREEDY SULLE DIVERSE ISTANZE
+    #compare_greedy(7,100,80,44,2)
     #compare_greedy(20,100,80,44,2)
-
-    #LE SEGUENTI RIGHE APPLICANO LE GREEDY SU UN'ISTANZA ALLA VOLTA
-    #Sol1 = greedy_minimum_opening_time(instance_1)
-    #Sol1B = greedy_minimum_opening_time(instance_2)
-
-    #Sol2 = greedy_minimum_distance_from_zero(instance_1)
-    #Sol2B = greedy_minimum_distance_from_zero(instance_2)
-
-    #Sol3 = nn_greedy(instance_1)
-    #Sol3B = nn_greedy(instance_2)
-
-    ## STAMPA DELLE ISTANZE GENERATE
-    #print("Istanza 1:")
-    #print_istance(instance_1)
-    #print("\nIstanza 2:")
-    #print_istance(instance_2)
-
-    #print("\n")
-    #plot_tsp_nodes(instance_1)
-    #plot_tsp_nodes(instance_2)
+    #compare_greedy(50,100,80,44,2)
 
     # STAMPA DELLE ISTANZE CON FRECCE DI COLLEGAMENTO
     #plot_tsp_nodes_link(instance_1)
     #plot_tsp_nodes_link(instance_2)
     #plot_tsp_nodes_link(instance_3)
 
-    # STAMPA DELLE SOLUZIONI DELLE GREEDY
-    #plot_tsp_nodes_link(Sol1)
-    #plot_tsp_nodes_link(Sol1B)
-
-    #plot_tsp_nodes_link(Sol2)
-    #plot_tsp_nodes_link(Sol2B)
-
-    #plot_tsp_nodes_link(Sol3)
-    #plot_tsp_nodes_link(Sol3B)
-
-
     # STAMPO DELLE METRICHE INERENTI ALLE LOCAL SEARCH
 
-    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LS_swap_adjacent')
-    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LS_swap_adjacent')
-    #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LS_swap_adjacent')
-
-    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insert')
-    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insert')
-    #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insert')
+    #call_LocalSearch(7, 100, 80, 44, 2, 'greedy_minimum_opening_time','LS_swap_adjacent')
+    #call_LocalSearch(50, 100, 80, 44, 2, 'greedy_minimum_opening_time','LS_swap_adjacent')
     
-    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insertT')
+    #call_LocalSearch(50, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insert')
+    #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insert')
+    
+    #call_LocalSearch(50, 100, 80, 44, 2, 'greedy_minimum_opening_time','LSH_city_insertT')
     #call_LocalSearch(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero','LSH_city_insertT')
-    #call_LocalSearch(20, 100, 80, 44, 2, 'nn_greedy','LSH_city_insertT')
 
     # STAMPO I RISULTATI DELLE TABU SEARCH
-    #call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'information_guided_tabu_searchAR',15,3)
-    #call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'tabu_search_city_insertAR',15,4)
+    #call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'information_guided_tabu_searchAR',8,3)
+    #call_tabu_searchA(50, 100, 80, 44, 2, 'nn_greedy', 'information_guided_tabu_searchAR',10,8)
+
+    #call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'tabu_search_city_insertA',8,3)
+    #call_tabu_searchA(50, 100, 80, 44, 2, 'nn_greedy', 'tabu_search_city_insertA',10,8)
 
 
     plt.show()

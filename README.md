@@ -73,6 +73,16 @@ Nel progetto vengono illustrate le seguenti procedure:
   Funzioni per stampare le istanze e rappresentarle graficamente:
   - `plot_tsp_nodes`: visualizza solo i nodi
   - `plot_tsp_nodes_link`: visualizza nodi e collegamenti con frecce
+  - `call_greedy`: esegue un algoritmo greedy sull'istanza passata e ne stampa il grafico
+  - `compare_greedy`: esegue tutti gli algoritmi greedy sulla stessa istanza e stmpa un'unica figura che mostra i risultati.
+  - `call_LocalSearch`: applica l'algoritmo local search passato come parametro partendo da una soluzione greedy. Stampa una figura con il risultato della greedy iniziale, il risultato della local search e la progressione del valore della funzione obbiettivo.
+  - `call_tabu_searchA`: applica l'algoritmo tabu 
+  search passato come parametro partendo da una 
+  soluzione iniziale (solitamente greedy). 
+  Stampa una figura con il risultato
+  dell'algoritmo iniziale, il risultato della tabu 
+  search e la progressione del valore della funzione 
+  obbiettivo.
 ---
 - **Algoritmi Greedy**<br>
 

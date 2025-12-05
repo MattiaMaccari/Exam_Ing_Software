@@ -20,9 +20,10 @@ from exam.exam import (
 # -----------------------------------------------------------
 INSTANCE_PARAMS = dict(
     n=20,
-    max_coordinate=200,
-    seed_coordinates=3,
-    seed_opening_times=4
+    max_coordinate=100,
+    max_opening_time=80,
+    seed_coordinates=44,
+    seed_opening_times=2
 )
 
 
@@ -72,7 +73,6 @@ def test_full_integration_pipeline():
     for name, func in ls_methods.items():
         start = time.time()
         route, fo, moves, extra = func(start_route, start_fo)
-        results[name] = fo
         assert len(route) == 20
         assert fo >= 0
         assert moves >= 0
@@ -91,7 +91,6 @@ def test_full_integration_pipeline():
     for name, func in ts_methods.items():
         start = time.time()
         route, val, curr, best, tabu = func(start_route, start_fo, instance, tabu=10, stall=10)
-        results[name] = val
         assert len(route) == 20
         assert val >= 0
         assert isinstance(curr, list)
@@ -104,7 +103,6 @@ def test_full_integration_pipeline():
     # -------------------------------------------------------
     start = time.time()
     route, val, extra = IT_LS_INFORMATION_GUIDED(instance, max_iterations=60)
-    results["ILS"] = val
 
     assert len(route) == 20
     assert val >= 0
