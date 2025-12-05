@@ -82,6 +82,8 @@ def main():
     #call_tabu_searchA(20, 100, 80, 44, 2, 'greedy_minimum_distance_from_zero', 'tabu_search_city_insertA',8,3)
     #call_tabu_searchA(50, 100, 80, 44, 2, 'nn_greedy', 'tabu_search_city_insertA',10,8)
 
+    # STAMPO I RISULTATI DELLA ITERATED LOCAL SEARCH
+    #print_iterated_local_search()
 
     plt.show()
 
@@ -873,7 +875,7 @@ import seaborn as sns
 def print_iterated_local_search():
 
     # Genera istanza e soluzione
-    nodes = generate_tsp_instance(n=50, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
+    nodes = generate_tsp_instance(n=20, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
     sol, sol_obj, extra_info = IT_LS_INFORMATION_GUIDED(nodes, 180)
     #print(extra_info)
     # Estrai dati
