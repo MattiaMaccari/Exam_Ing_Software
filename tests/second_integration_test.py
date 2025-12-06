@@ -15,9 +15,9 @@ from exam.exam import (
     IT_LS_INFORMATION_GUIDED
 )
 
-# -----------------------------------------------------------
+# -------------------
 # PARAMETRI ISTANZA
-# -----------------------------------------------------------
+# -------------------
 INSTANCE_PARAMS = dict(
     n=20,
     max_coordinate=100,
@@ -28,18 +28,18 @@ INSTANCE_PARAMS = dict(
 
 
 def test_full_integration_pipeline():
-    # -------------------------------------------------------
+    # ------------------
     # 1) Genera istanza
-    # -------------------------------------------------------
+    # ------------------
     instance = generate_tsp_instance(**INSTANCE_PARAMS)
     assert len(instance) == 20
     assert instance[0]['id'] == 0
 
-    results = {}
+    #results = {}
 
-    # -------------------------------------------------------
+    # -----------
     # 2) GREEDY
-    # -------------------------------------------------------
+    # -----------
     greedy_methods = {
         "greedy_opening": greedy_minimum_opening_time,
         "greedy_dist0": greedy_minimum_distance_from_zero,
@@ -53,15 +53,15 @@ def test_full_integration_pipeline():
         route = func(instance)
         fo = calculate_objective(route, instance)
         greedy_solutions[name] = (route, fo)
-        results[name] = fo
+        #results[name] = fo
         assert len(route) == 20
-        assert fo >= 0
+        assert fo > 0
         assert time.time() - start < 5
 
 
-    # -------------------------------------------------------
+    # -----------------
     # 3) LOCAL SEARCH
-    # -------------------------------------------------------
+    # -----------------
     ls_methods = {
         "ls_swap": lambda r, fo: LS_swap_adjacent(r, fo, instance),
         "ls_insert": lambda r, fo: LSH_city_insert(r, fo, instance, H=3),
@@ -74,25 +74,25 @@ def test_full_integration_pipeline():
         start = time.time()
         route, fo, moves, extra = func(start_route, start_fo)
         assert len(route) == 20
-        assert fo >= 0
-        assert moves >= 0
+        assert fo > 0
+        assert moves > 0
         assert isinstance(extra, list)
         assert time.time() - start < 10
 
 
-    # -------------------------------------------------------
+    # ----------------
     # 4) TABU SEARCH
-    # -------------------------------------------------------
+    # ----------------
     ts_methods = {
         "tabu_AR": tabu_search_city_insertAR,
         "info_guided_AR": information_guided_tabu_searchAR
     }
 
     for name, func in ts_methods.items():
-        start = time.time()
+        #start = time.time()
         route, val, curr, best, tabu = func(start_route, start_fo, instance, tabu=10, stall=10)
         assert len(route) == 20
-        assert val >= 0
+        assert val > 0
         assert isinstance(curr, list)
         assert isinstance(best, list)
         assert isinstance(tabu, list)
@@ -105,6 +105,6 @@ def test_full_integration_pipeline():
     route, val, extra = IT_LS_INFORMATION_GUIDED(instance, max_iterations=60)
 
     assert len(route) == 20
-    assert val >= 0
+    assert val > 0
     assert isinstance(extra, list)
     

@@ -243,7 +243,7 @@ def test_greedy_minimum_distance_from_zero():
 
 from exam.exam import nn_greedy
 
-def test_nn_greedy_order_and_idle_tardiness():
+def test_nn_greedy():
     # Creazione dei nodi
     node0 = {
         'id': 0,
@@ -290,7 +290,7 @@ def build_node(id, opening_time, coordinates, distance_vector):
         'idle_tardiness': (0, 0)
     }
 
-def test_LS_swap_adjacent_improves_solution():
+def test_LS_swap_adjacent():
     # Distanze simmetriche tra 5 nodi
     d0 = np.array([0, 4, 8, 6, 9])
     d1 = np.array([4, 0, 5, 7, 6])
@@ -340,7 +340,7 @@ def build_node(id, opening_time, coordinates, distance_vector):
         'idle_tardiness': (0, 0)
     }
 
-def test_LSH_city_insert_improves_solution():
+def test_LSH_city_insert():
     print("Test eseguito")
     # Distanze simmetriche tra 5 nodi
     d0 = np.array([0, 4, 8, 6, 9])
@@ -394,7 +394,7 @@ def build_node(id, opening_time, coordinates, distance_vector):
         'idle_tardiness': (0, 0)
     }
 
-def test_LSH_city_insertT_improves_solution():
+def test_LSH_city_insertT():
     # Distanze simmetriche tra 5 nodi
     d0 = np.array([0, 4, 8, 6, 9])
     d1 = np.array([4, 0, 5, 7, 6])
@@ -447,7 +447,7 @@ from exam.exam import tabu_search_city_insertAR
 #        'idle_tardiness': (0, 0)
 #    }
 
-def test_tabu_search_city_insertAR_improves_solution():
+def test_tabu_search_city_insertAR():
     ## Distanze simmetriche tra 5 nodi
     #d0 = np.array([0, 4, 8, 6, 9])
     #d1 = np.array([4, 0, 5, 7, 6])
@@ -507,7 +507,7 @@ from exam.exam import information_guided_tabu_searchAR
 #        'idle_tardiness': (0, 0)
 #    }
 
-def test_information_guided_tabu_searchAR_improves_solution():
+def test_information_guided_tabu_searchAR():
     # Distanze simmetriche tra 5 nodi
     #d0 = np.array([0, 4, 8, 6, 9])
     #d1 = np.array([4, 0, 5, 7, 6])
@@ -568,7 +568,7 @@ def build_node(id, opening_time, coordinates, distance_vector):
         'idle_tardiness': (0, 0)
     }
 
-def test_IT_LS_INFORMATION_GUIDED_improves_solution():
+def test_IT_LS_INFORMATION_GUIDED():
     # Distanze simmetriche tra 5 nodi
     d0 = np.array([0, 4, 8, 6, 9])
     d1 = np.array([4, 0, 5, 7, 6])
@@ -831,6 +831,5 @@ def test_plot_tsp_nodes_link_executes_plot_block():
         assert mock_text.call_count == len(nodes) - 1
 
         # Verifica che siano state disegnate le frecce
-        # (len(nodes)-1) collegamenti + 1 collegamento finale
         expected_arrows = (len(nodes) - 1) + 1
         assert mock_annotate.call_count == expected_arrows
