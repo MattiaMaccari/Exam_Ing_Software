@@ -16,10 +16,9 @@ Il problema del commesso viaggiatore (TSP – Traveling Salesman Problem) è un 
 <br>
 Nel problema del commesso viaggiatore con tempi di apertura, ogni nodo 𝑖 i può essere visitato solo a partire da un determinato istante di apertura 𝑡_𝑖.
 
-Questo vincolo temporale aggiuntivo complica ulteriormente il problema:
-**La presenza di tempi di apertura riduce lo spazio delle soluzioni ammissibili, escludendo molti percorsi che sarebbero validi nel TSP classico.**
+Questo vincolo temporale aggiuntivo complica ulteriormente il problema.
 
-Se un nodo viene raggiunto prima del suo tempo di apertura, il commesso deve attendere, introducendo periodi di inattività (**idle time**) che incidono sull’efficienza complessiva del tour.
+Infatti, se un nodo viene raggiunto prima del suo tempo di apertura, il commesso deve attendere, introducendo periodi di inattività (**idle time**) che incidono sull’efficienza complessiva del tour.
 
 Dal punto di vista della teoria della complessità, il TSP con tempi di apertura rimane NP-hard come il TSP classico, ma nella pratica risulta più difficile da risolvere per via dei vincoli temporali.
 
@@ -74,7 +73,7 @@ Nel progetto vengono illustrate le seguenti procedure:
   - `plot_tsp_nodes`: visualizza solo i nodi
   - `plot_tsp_nodes_link`: visualizza nodi e collegamenti con frecce
   - `call_greedy`: esegue un algoritmo greedy sull'istanza passata e ne stampa il grafico
-  - `compare_greedy`: esegue tutti gli algoritmi greedy sulla stessa istanza e stmpa un'unica figura che mostra i risultati.
+  - `compare_greedy`: esegue tutti gli algoritmi greedy sulla stessa istanza e stampa un'unica figura che mostra i risultati.
   - `call_LocalSearch`: applica l'algoritmo local search passato come parametro partendo da una soluzione greedy. Stampa una figura con il risultato della greedy iniziale, il risultato della local search e la progressione del valore della funzione obbiettivo.
   - `call_tabu_searchA`: applica l'algoritmo tabu 
   search passato come parametro partendo da una 
@@ -98,6 +97,11 @@ Nel progetto vengono illustrate le seguenti procedure:
   neppure l’ammissibilità della soluzione prodotta.
 
   <u>**PROCEDURA GREEDY (TEMPLATE):**</u>
+
+  E (ground set) è l'insieme degli elementi che compongono le soluzione del problema.
+
+  F (feasible region/regione ammissibile). 
+
   * Soluzione iniziale S0=∅, 
   * Ad ogni step k - seleziona ek come l’elemento di E più promettente (criterio best) tra quelli non ancora esaminati, - valuta se la soluzione parziale Sk ∪ ek ∈ F (test di indipendenza o di ammissibilità delle soluzioni parziali) 
   * In caso positivo, estendi Sk con Sk ∪ ek (Sk+1:=Sk∪ek) altrimenti Sk+1:=Sk
@@ -289,7 +293,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 **INTEGRATION TEST - second_integration_test.py**
 
-Questo test verifica l’intero pipeline di risoluzione di un problema TSP (Traveling Salesman Problem), controllando che i diversi algoritmi implementati funzionino correttamente e si integrino tra loro.
+Questo test verifica l’intera pipeline di risoluzione di un problema TSP (Traveling Salesman Problem), controllando che i diversi algoritmi implementati funzionino correttamente e si integrino tra loro.
 In particolare:
 - **Generazione dell’istanza**
   - Crea un problema TSP con 20 città, coordinate casuali e tempi di apertura.
@@ -330,18 +334,20 @@ Struttura dei test
   - Controlla che i tre algoritmi greedy (greedy_minimum_opening_time, greedy_minimum_distance_from_zero, nn_greedy) producano percorsi completi della giusta lunghezza (pari al numero di città).
 
 - **TestLocalSearch**
-  - Verifica le varianti di ricerca locale:
+
+  Verifica le varianti di ricerca locale:
   - Swap Adjacent: scambia città adiacenti nel percorso.
   - City Insert: inserisce città in posizioni diverse.
   - City Insert Tail (nuovo test): variante che lavora sulla parte finale del percorso.
-  - In tutti i casi si controlla che il percorso rimanga valido e che il valore dell’obiettivo sia numerico.
+  - In tutti i casi si controlla che il percorso rimanga valido, che il valore dell’obiettivo sia numerico, che vengano effettivamente effettuate mosse e che il nuovo valore obbiettivo sia minore di quello della soluzione iniziale.
 
 - **TestTabuSearch**
   - Valida l’algoritmo di Tabu Search e la sua variante information-guided.
   - Si assicura che vengano restituiti percorsi della giusta lunghezza e valori obiettivo coerenti.
+  - Anche qui si verifica che in seguito all'applicazione dell'algoritmo il valore della funzione obbiettivo diminuisca.
 
 - **TestILS**
-  - Verifica l’algoritmo di Iterated Local Search (ILS),    controllando che produca un percorso valido con il numero corretto di città.
+  - Verifica l’algoritmo di Iterated Local Search (ILS), controllando che produca un percorso valido con il numero corretto di città e che il valore obbiettivo sia stato effettivamente calcolato.
 
 <br>
 

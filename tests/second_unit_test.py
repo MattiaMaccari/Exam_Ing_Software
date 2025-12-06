@@ -89,24 +89,26 @@ class TestTabuSearch(unittest.TestCase):
         istance = generate_tsp_instance(10, 200, 3, 4)
         route = nn_greedy(istance)
         obj_val = calculate_objective(route, istance)
-        best_route, fo, extra1, extra2, _ = tabu_search_city_insertAR(route, obj_val, istance, tabu=15, stall=4)
+        best_route, fo, extra1, extra2, tabu = tabu_search_city_insertAR(route, obj_val, istance, tabu=15, stall=4)
         self.assertEqual(len(best_route), 10)
         self.assertIsInstance(fo, (int, float))
         self.assertGreaterEqual(obj_val, fo)
         self.assertIsInstance(extra1, list)
         self.assertIsInstance(extra2, list)
+        self.assertIsInstance(tabu, list)
 
 
     def test_information_guided_tabu(self):
         instance = generate_tsp_instance(10, 200, 3, 4)
         route = nn_greedy(instance)
         obj_val = calculate_objective(route, instance)
-        best_route, fo, extra1, extra2, _  = information_guided_tabu_searchAR(route, obj_val, instance, tabu=15, stall=4)
+        best_route, fo, extra1, extra2, tabu  = information_guided_tabu_searchAR(route, obj_val, instance, tabu=15, stall=4)
         self.assertEqual(len(best_route), 10)
         self.assertIsInstance(fo, (int, float))
         self.assertGreaterEqual(obj_val, fo)
         self.assertIsInstance(extra1, list)
         self.assertIsInstance(extra2, list)
+        self.assertIsInstance(tabu, list)
 
 class TestILS(unittest.TestCase):
     def test_ils(self):
