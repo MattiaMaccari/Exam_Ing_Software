@@ -90,7 +90,7 @@ def test_full_integration_pipeline():
 
     for name, func in ts_methods.items():
         #start = time.time()
-        route, val, curr, best, tabu = func(start_route, start_fo, instance, tabu=10, stall=10)
+        route, val, curr, best, tabu = func(start_route, start_fo, instance, tabu=15, stall=4)
         assert len(route) == 20
         assert val > 0
         assert isinstance(curr, list)
