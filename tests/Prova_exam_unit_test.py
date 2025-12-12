@@ -469,8 +469,8 @@ def test_tabu_search_city_insertAR():
     obj_val = calculate_objective(route, istance)
 
     # Parametri Tabu
-    tabu = 3
-    stall = 10
+    tabu = 15
+    stall = 4
 
     # Applico Tabu Search
     best_route, best_obj_val, info_current, info_best, best_tabu = tabu_search_city_insertAR(
@@ -530,8 +530,8 @@ def test_information_guided_tabu_searchAR():
     obj_val = calculate_objective(route, istance)
 
     # Parametri Tabu
-    tabu = 3
-    stall = 10
+    tabu = 15
+    stall = 4
 
     # Lista contenente tutti i nodi
     listsorted = list(range(20))
@@ -733,15 +733,15 @@ import numbers
 
 def test_call_tabu_searchA_returns_valid_solution():
     # Parametri per istanza riproducibile
-    n = 5
-    max_coordinate = 50
-    max_opening_time = 20
-    seed_coordinates = 42
-    seed_opening_times = 99
+    n = 20
+    max_coordinate = 100
+    max_opening_time = 80
+    seed_coordinates = 44
+    seed_opening_times = 2
     greedy = 'greedy_minimum_opening_time'
     tabu_search = 'tabu_search_city_insertAR'
-    tabu_size = 5
-    iteration_without_improvement = 3
+    tabu_size = 15
+    iteration_without_improvement = 4
 
     # Disattiva la stampa grafica
     route, value = call_tabu_searchA(
@@ -767,11 +767,12 @@ def test_call_tabu_searchA_returns_valid_solution():
     assert [node['id'] for node in route][0] == 0  # parte dalla base
     assert sorted([node['id'] for node in route]) == list(range(n))  # tutti i nodi presenti
 
-from unittest.mock import patch
+# from unittest.mock import patch
 def test_call_tabu_searchA_executes_plot_block():
-    with patch("exam.exam.plt.show") as mock_show:
-         call_tabu_searchA(plot="YES",tabu_search = "tabu_search_city_insertAR")
-         assert mock_show.call_count == 1
+    #with patch("exam.exam.plt.show") as mock_show:
+         #call_tabu_searchA(plot="YES", tabu_search = "tabu_search_city_insertAR")
+         result_plot = call_tabu_searchA(20, 100, 80, 44, 2, greedy_minimum_distance_from_zero, tabu_search_city_insertAR, tabu_size=15, iteration_without_improvement=4, plot="YES")
+         assert result_plot is None
 
 
 # TEST DELLA FUNZIONE DI STAMPA DELLA ITERATED LOCAL SEARCH

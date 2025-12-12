@@ -70,14 +70,14 @@ def test_main_and_functions(capsys, monkeypatch):
 
     # 5. TABU SEARCH
     tabu_strategies = [
-        ("greedy_minimum_distance_from_zero", "information_guided_tabu_searchAR", 15, 3),
-        ("greedy_minimum_distance_from_zero", "tabu_search_city_insertAR", 15, 4),
+        ("greedy_minimum_distance_from_zero", "information_guided_tabu_searchAR"),
+        ("greedy_minimum_distance_from_zero", "tabu_search_city_insertAR"),
     ]
-    for greedy_name, tabu_name, tenure, aspiration in tabu_strategies:
-        route_tabu, val_route_tabu = call_tabu_searchA(20, 100, 80, 44, 2, greedy_name, tabu_name, tenure, aspiration, plot=None)
+    for greedy_name, tabu_name in tabu_strategies:
+        route_tabu, val_route_tabu = call_tabu_searchA(20, 100, 80, 44, 2, greedy_name, tabu_name, tabu_size=15, iteration_without_improvement=4, plot=None)
         check_route_validity(route_tabu, instance)
         assert val_route_tabu is not None
 
         # Caso con plot attivo
-        result_plot = call_tabu_searchA(20, 100, 80, 44, 2, greedy_name, tabu_name, tenure, aspiration, plot="YES")
+        result_plot = call_tabu_searchA(20, 100, 80, 44, 2, greedy_name, tabu_name, tabu_size=15, iteration_without_improvement=4, plot="YES")
         assert result_plot is None
