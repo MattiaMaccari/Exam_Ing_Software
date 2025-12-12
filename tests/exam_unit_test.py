@@ -46,6 +46,7 @@ class TestGreedy(unittest.TestCase):
         expected_route = [0, 18, 7, 2, 14, 4, 13, 8, 15, 16, 1, 19, 5, 11, 9, 12, 17, 3, 6, 10]
         self.assertEqual(expected_route, ids)
         expected_obj = 9959
+        self.assertEqual(expected_obj, obj)
 
 
     def test_greedy_distance(self):
