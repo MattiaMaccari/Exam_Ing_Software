@@ -53,8 +53,8 @@ def main():
     instance_2 = generate_tsp_instance(n=20, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
     instance_3 = generate_tsp_instance(n=50, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
 
-    print_istance(instance_1)
-    print_istance(instance_2)
+    #print_istance(instance_1)
+    #print_istance(instance_2)
     # STAMPA DELLA COMPARAZIONE DELLE GREEDY SULLE DIVERSE ISTANZE
     #compare_greedy(7,100,80,44,2)
     #compare_greedy(20,100,80,44,2)
@@ -85,9 +85,6 @@ def main():
 
     # STAMPO I RISULTATI DELLA ITERATED LOCAL SEARCH
     #print_iterated_local_search()
-
-    plt.show()
-
 
 if __name__ == "__main__":
     main()
