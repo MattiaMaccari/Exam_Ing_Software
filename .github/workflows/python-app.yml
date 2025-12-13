@@ -52,7 +52,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: mattiamaccari/exam:latest_image_try
+        tags: mattiamaccari/exam:latest_image_exam
 
 
 
