@@ -49,7 +49,7 @@ def print_istance(nodes):
 
 def main():
     # GENERAZIONE DELLE ISTANZE
-    instance_1 = generate_tsp_instance(n=2, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
+    instance_1 = generate_tsp_instance(n=3, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
     instance_2 = generate_tsp_instance(n=20, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
     instance_3 = generate_tsp_instance(n=50, max_coordinate=100, max_opening_time=80, seed_coordinates=44, seed_opening_times=2)
 
