@@ -188,7 +188,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
   <u>**DEFINIZIONE:**</u>
 
-  Ad ogni iterazione si seleziona la miglior soluzione dell’intorno diversa dalla peggiore se quella corrente è un ottimo locale.
+  Ad ogni iterazione si seleziona la miglior soluzione dell’intorno diversa dalla soluzione corrente e ,potenzialmente, peggiore se quella corrente è un ottimo locale.
   
   * La sequenza del valore delle soluzioni visitate non è più monotona, quindi occorre mantenere memoria della miglior soluzione visitata (ottimo candidato).
   * Ad ogni iterazione si memorizza in una lista tabu l’inversa della mossa appena effettuata, che resterà proibita per le prossime N (lunghezza lista tabù) iterazioni. 
