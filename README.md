@@ -291,7 +291,7 @@ Nel progetto vengono illustrate le seguenti procedure:
 
 ## SEZIONE DI TEST - INTEGRATION E UNIT TEST
 
-**INTEGRATION TEST - second_integration_test.py**
+**INTEGRATION TEST - exam_integration_test.py**
 
 Questo test verifica l’intera pipeline di risoluzione di un problema TSP (Traveling Salesman Problem), controllando che i diversi algoritmi implementati funzionino correttamente e si integrino tra loro.
 In particolare:
@@ -320,7 +320,7 @@ Il test dimostra che tutti i moduli dell’algoritmo TSP (generazione istanza, g
 ---
 <br>
 
-**UNIT TEST - second_unit_test.py** 
+**UNIT TEST - exam_unit_test.py** 
 
 Questo insieme di test automatizzati serve a verificare, in modo modulare, il corretto funzionamento dei vari algoritmi e componenti sviluppati per il problema del commesso viaggiatore (TSP).
 Struttura dei test
