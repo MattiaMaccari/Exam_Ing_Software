@@ -17,9 +17,8 @@ from exam.exam import (
     IT_LS_INFORMATION_GUIDED
 )
 
-# -------------------
 # PARAMETRI ISTANZA
-# -------------------
+
 INSTANCE_PARAMS = dict(
     n=20,
     max_coordinate=100,
@@ -31,9 +30,9 @@ INSTANCE_PARAMS = dict(
 class Integration_test(unittest.TestCase):
 
     def test_full_integration_pipeline(self):
-        # ------------------
-        # 1) Genera istanza
-        # ------------------
+        
+        # Genera istanza
+        
         instance = generate_tsp_instance(**INSTANCE_PARAMS)
         assert len(instance) == 20
         assert instance[0]['id'] == 0
@@ -47,9 +46,9 @@ class Integration_test(unittest.TestCase):
 
         #results = {}
 
-        # -----------
-        # 2) GREEDY
-        # -----------
+        
+        # GREEDY
+        
         greedy_methods = {
             "greedy_opening": greedy_minimum_opening_time,
             "greedy_dist0": greedy_minimum_distance_from_zero,
@@ -87,9 +86,8 @@ class Integration_test(unittest.TestCase):
                 self.assertEqual(fo, 3952)
                 
 
-        # -----------------
-        # 3) LOCAL SEARCH
-        # -----------------
+        # LOCAL SEARCH
+
         ls_methods = {
             "ls_swap": lambda r, fo: LS_swap_adjacent(r, fo, instance),
             "ls_insert": lambda r, fo: LSH_city_insert(r, fo, instance, H=5),
@@ -125,9 +123,9 @@ class Integration_test(unittest.TestCase):
                 self.assertEqual(expected_route, ids)
                 self.assertEqual(fo, 3333)
 
-        # ----------------
-        # 4) TABU SEARCH
-        # ----------------
+        
+        # TABU SEARCH
+        
         ts_methods = {
             "tabu_AR": tabu_search_city_insertAR,
             "info_guided_AR": information_guided_tabu_searchAR
@@ -157,9 +155,8 @@ class Integration_test(unittest.TestCase):
                 self.assertEqual(val, 3803)
 
 
-        # -------------------------------------------------------
-        # 5) ITERATED LOCAL SEARCH
-        # -------------------------------------------------------
+        # ITERATED LOCAL SEARCH
+
         start = time.time()
         route, val, extra = IT_LS_INFORMATION_GUIDED(instance, max_iterations=60)
 
